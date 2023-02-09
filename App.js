@@ -8,6 +8,7 @@ import {
   Keyboard,
 } from "react-native";
 import LoginForm from "./components/LoginScreen";
+import RegisterForm from "./components/RegisterScreen";
 
 export default function App() {
   return (
@@ -17,7 +18,7 @@ export default function App() {
           style={{ ...styles.image }}
           source={require("./assets/images/photoBg.jpg")}
         >
-          <LoginForm />
+          <RegisterForm />
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>

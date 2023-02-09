@@ -7,30 +7,82 @@ import {
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
-  Keyboard,
 } from "react-native";
+import * as React from "react";
+import Svg, { Circle, Path } from "react-native-svg";
 
 const initialState = {
   email: "",
   password: "",
+  nick: "",
 };
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const [hidePassword, setHidePassword] = useState(true);
   const [loginData, setLoginData] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [borderInputColorEmail, setBorderInputColorEmail] = useState("#E8E8E8");
   const [borderInputColorPassword, setBorderInputColorPassword] =
     useState("#E8E8E8");
+  const [borderInputColorNick, setBorderInputColorNick] = useState("#E8E8E8");
   return (
-    <View style={{ ...styles.container, height: isShowKeyboard ? 250 : 489 }}>
-      <Text style={styles.header}>Войти</Text>
+    <View style={{ ...styles.container, height: isShowKeyboard ? 360 : 549 }}>
+      <View
+        style={[
+          styles.avatarPlace,
+          {
+            transform: [{ translateX: -60 }],
+          },
+        ]}
+      >
+        <View style={styles.svgWrapper}>
+          <TouchableOpacity style={styles.svg}>
+            <Svg
+              width={25}
+              height={25}
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <Circle cx={12.5} cy={12.5} r={12} fill="#fff" stroke="#FF6C00" />
+              <Path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M13 6h-1v6H6v1h6v6h1v-6h6v-1h-6V6Z"
+                fill="#FF6C00"
+              />
+            </Svg>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <Text style={styles.header}>Регистрация</Text>
       <View style={styles.form}>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
           <View>
             <View>
+              <TextInput
+                onFocus={() => {
+                  setBorderInputColorNick("#FF6C00");
+                  setIsShowKeyboard(true);
+                }}
+                onBlur={() => {
+                  setBorderInputColorNick("#E8E8E8");
+                  setIsShowKeyboard(false);
+                }}
+                style={{
+                  ...styles.input,
+                  borderColor: borderInputColorNick,
+                }}
+                placeholder={"Логин"}
+                value={loginData.nick}
+                onChangeText={(value) => {
+                  setLoginData((prState) => ({ ...prState, nick: value }));
+                }}
+              />
+            </View>
+
+            <View style={{ marginTop: 16 }}>
               <TextInput
                 onFocus={() => {
                   setBorderInputColorEmail("#FF6C00");
@@ -40,7 +92,10 @@ const LoginForm = () => {
                   setBorderInputColorEmail("#E8E8E8");
                   setIsShowKeyboard(false);
                 }}
-                style={{ ...styles.input, borderColor: borderInputColorEmail }}
+                style={{
+                  ...styles.input,
+                  borderColor: borderInputColorEmail,
+                }}
                 placeholder={"Адрес электронной почты"}
                 value={loginData.email}
                 onChangeText={(value) => {
@@ -48,6 +103,7 @@ const LoginForm = () => {
                 }}
               />
             </View>
+
             <View style={{ marginTop: 16, position: "relative" }}>
               <TextInput
                 onFocus={() => {
@@ -92,12 +148,10 @@ const LoginForm = () => {
                 setLoginData(initialState);
               }}
             >
-              <Text style={styles.btnText}>Войти</Text>
+              <Text style={styles.btnText}>Зарегистрироваться</Text>
             </TouchableOpacity>
             <View>
-              <Text style={styles.regNav}>
-                Нет аккаунта? Зарегистрироваться
-              </Text>
+              <Text style={styles.regNav}>Уже есть аккаунт? Войти</Text>
             </View>
           </>
         )}
@@ -111,6 +165,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
+    position: "relative",
+  },
+  avatarPlace: {
+    width: 120,
+    height: 120,
+    backgroundColor: "red",
+    position: "absolute",
+    top: -60,
+    left: "50%",
+    backgroundColor: "#F6F6F6",
+    borderRadius: 16,
+  },
+  svgWrapper: {
+    position: "absolute",
+    right: -13,
+    bottom: 14,
+  },
+  svg: {
+    borderRadius: "50%",
+    width: 25,
+    height: 25,
+    borderRadius: 15,
   },
   header: {
     textAlign: "center",
@@ -119,7 +195,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#212121",
     letterSpacing: 0.01,
-    marginTop: 32,
+    marginTop: 92,
     marginBottom: 33,
   },
   form: {
@@ -162,4 +238,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginForm;
+export default RegisterForm;
