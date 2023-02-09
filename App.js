@@ -19,6 +19,7 @@ export default function App() {
           source={require("./assets/images/photoBg.jpg")}
         >
           <RegisterForm />
+          {/* <LoginForm /> */}
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>

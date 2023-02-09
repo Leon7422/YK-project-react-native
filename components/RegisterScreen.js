@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import * as React from "react";
 import Svg, { Circle, Path } from "react-native-svg";
+import UploadImage from "./UploadImage";
 
 const initialState = {
   email: "",
@@ -26,8 +27,9 @@ const RegisterForm = () => {
     useState("#E8E8E8");
   const [borderInputColorNick, setBorderInputColorNick] = useState("#E8E8E8");
   return (
-    <View style={{ ...styles.container, height: isShowKeyboard ? 360 : 549 }}>
-      <View
+    <View style={{ ...styles.container, height: isShowKeyboard ? 350 : 549 }}>
+      <UploadImage />
+      {/*       <View
         style={[
           styles.avatarPlace,
           {
@@ -53,7 +55,7 @@ const RegisterForm = () => {
             </Svg>
           </TouchableOpacity>
         </View>
-      </View>
+      </View> */}
       <Text style={styles.header}>Регистрация</Text>
       <View style={styles.form}>
         <KeyboardAvoidingView
