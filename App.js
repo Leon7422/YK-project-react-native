@@ -7,20 +7,15 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import LoginForm from "./components/LoginScreen";
-import RegisterForm from "./components/RegisterScreen";
+import LoginScreen from "./screens/LoginScreen";
+import RegisterForm from "./screens/RegisterScreen";
 
 export default function App() {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={{ ...styles.container }}>
-        <ImageBackground
-          style={{ ...styles.image }}
-          source={require("./assets/images/photoBg.jpg")}
-        >
-          <RegisterForm />
-          {/* <LoginForm /> */}
-        </ImageBackground>
+        {/* <RegisterForm /> */}
+        <LoginScreen />
       </View>
     </TouchableWithoutFeedback>
   );
@@ -29,12 +24,5 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  image: {
-    flex: 1,
-    resizeMode: "cover",
-    justifyContent: "flex-end",
-
-    // alignItems: "flex-end",
   },
 });
