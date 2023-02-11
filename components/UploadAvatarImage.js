@@ -11,7 +11,7 @@ import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import Svg, { Circle, Path } from "react-native-svg";
 
-export default function UploadImage() {
+export default function UploadAvatarImage() {
   const [image, setImage] = useState(null);
   const addImage = async () => {
     console.log("start");

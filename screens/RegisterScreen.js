@@ -11,7 +11,7 @@ import {
   Keyboard,
 } from "react-native";
 import * as React from "react";
-import UploadImage from "../components/UploadImage";
+import UploadAvatarImage from "../components/UploadAvatarImage";
 import ImageBackgroundMountain from "../components/ImageBackgroundMountain";
 import { useKeyboard } from "../helpers/useKeyboard";
 
@@ -47,7 +47,7 @@ const RegisterForm = ({ navigation }) => {
               height: isShowKeyboard ? heightKeyboard + 355 : 549,
             }}
           >
-            <UploadImage />
+            <UploadAvatarImage />
             <Text style={styles.header}>Регистрация</Text>
             <View style={styles.form}>
               <KeyboardAvoidingView

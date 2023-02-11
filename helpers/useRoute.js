@@ -5,13 +5,14 @@ import ProfileScreen from "../screens/ProfileScreen";
 import PostScreen from "../screens/PostScreen";
 import images from "../components/SVG";
 import { Feather } from "@expo/vector-icons";
-
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useState } from "react";
 
 const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
-const { SvgExit, SvgGrid, SvgPerson, SvgPlus } = images;
+
+const { SvgGrid, SvgPerson, SvgPlus } = images;
 
 const colorChanger = (focused) => {
   if (focused === true) {
@@ -22,6 +23,7 @@ const colorChanger = (focused) => {
 };
 
 const useRoute = (isAuth) => {
+  const [isShowKeyBoard, setIsShowKeyboard] = useState(false);
   if (!isAuth) {
     return (
       <AuthStack.Navigator>
@@ -68,6 +70,8 @@ const useRoute = (isAuth) => {
         }}
       />
       <MainTab.Screen
+        isShowKeyBoard={isShowKeyBoard}
+        setIsShowKeyboard={setIsShowKeyboard}
         name="Post"
         component={PostScreen}
         options={{
