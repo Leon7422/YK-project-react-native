@@ -9,13 +9,13 @@ import {
 } from "react-native";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterForm from "./screens/RegisterScreen";
+import HomeScreen from "./screens/HomeScreen";
 
 export default function App() {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={{ ...styles.container }}>
-        {/* <RegisterForm /> */}
-        <LoginScreen />
+        <HomeScreen />
       </View>
     </TouchableWithoutFeedback>
   );
