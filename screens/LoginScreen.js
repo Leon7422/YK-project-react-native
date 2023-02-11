@@ -8,6 +8,7 @@ import {
   Platform,
   KeyboardAvoidingView,
   Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import BackgroundImageMountain from "../components/ImageBackgroundMountain";
 import { useKeyboard } from "../helpers/useKeyboard";
@@ -17,7 +18,7 @@ const initialState = {
   password: "",
 };
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [loginData, setLoginData] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -29,101 +30,111 @@ const LoginScreen = () => {
   useEffect(() => {
     if (heightKeyboard === 0) {
       setIsShowKeyboard(false);
+      console.log(navigation);
     }
   }, [heightKeyboard]);
 
   return (
-    <BackgroundImageMountain style={{ marginBottom: -heightKeyboard }}>
-      <View
-        style={{
-          ...styles.container,
-          height: isShowKeyboard ? heightKeyboard + 230 : 489,
-        }}
-      >
-        <Text style={styles.header}>Войти</Text>
-        <View style={styles.form}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={{ flex: 1 }}>
+        <BackgroundImageMountain style={{ marginBottom: -heightKeyboard }}>
+          <View
+            style={{
+              ...styles.container,
+              height: isShowKeyboard ? heightKeyboard + 230 : 489,
+            }}
           >
-            <View>
-              <View>
-                <TextInput
-                  onFocus={() => {
-                    setBorderInputColorEmail("#FF6C00");
-                    setIsShowKeyboard(true);
-                  }}
-                  onBlur={() => {
-                    setBorderInputColorEmail("#E8E8E8");
-                  }}
-                  style={{
-                    ...styles.input,
-                    borderColor: borderInputColorEmail,
-                  }}
-                  placeholder={"Адрес электронной почты"}
-                  value={loginData.email}
-                  onChangeText={(value) => {
-                    setLoginData((prState) => ({ ...prState, email: value }));
-                  }}
-                />
-              </View>
-              <View style={{ marginTop: 16, position: "relative" }}>
-                <TextInput
-                  onFocus={() => {
-                    setBorderInputColorPassword("#FF6C00");
-                    setIsShowKeyboard(true);
-                  }}
-                  onBlur={() => {
-                    setBorderInputColorPassword("#E8E8E8");
-                  }}
-                  style={{
-                    ...styles.input,
-                    borderColor: borderInputColorPassword,
-                  }}
-                  placeholder={"Пароль"}
-                  value={loginData.password}
-                  onChangeText={(value) => {
-                    setLoginData((prState) => ({
-                      ...prState,
-                      password: value,
-                    }));
-                  }}
-                  secureTextEntry={hidePassword}
-                />
-                <TouchableOpacity
-                  style={styles.showPassBtn}
-                  onPress={() => {
-                    setHidePassword((prev) => !prev);
-                  }}
-                >
-                  <Text style={styles.showPassTitle}>Показать</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </KeyboardAvoidingView>
-
-          {isShowKeyboard ? (
-            ""
-          ) : (
-            <>
-              <TouchableOpacity
-                style={styles.btn}
-                onPress={() => {
-                  console.log(loginData);
-                  setLoginData(initialState);
-                }}
+            <Text style={styles.header}>Войти</Text>
+            <View style={styles.form}>
+              <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
               >
-                <Text style={styles.btnText}>Войти</Text>
-              </TouchableOpacity>
-              <View>
-                <Text style={styles.regNav}>
-                  Нет аккаунта? Зарегистрироваться
-                </Text>
-              </View>
-            </>
-          )}
-        </View>
+                <View>
+                  <View>
+                    <TextInput
+                      onFocus={() => {
+                        setBorderInputColorEmail("#FF6C00");
+                        setIsShowKeyboard(true);
+                      }}
+                      onBlur={() => {
+                        setBorderInputColorEmail("#E8E8E8");
+                      }}
+                      style={{
+                        ...styles.input,
+                        borderColor: borderInputColorEmail,
+                      }}
+                      placeholder={"Адрес электронной почты"}
+                      value={loginData.email}
+                      onChangeText={(value) => {
+                        setLoginData((prState) => ({
+                          ...prState,
+                          email: value,
+                        }));
+                      }}
+                    />
+                  </View>
+                  <View style={{ marginTop: 16, position: "relative" }}>
+                    <TextInput
+                      onFocus={() => {
+                        setBorderInputColorPassword("#FF6C00");
+                        setIsShowKeyboard(true);
+                      }}
+                      onBlur={() => {
+                        setBorderInputColorPassword("#E8E8E8");
+                      }}
+                      style={{
+                        ...styles.input,
+                        borderColor: borderInputColorPassword,
+                      }}
+                      placeholder={"Пароль"}
+                      value={loginData.password}
+                      onChangeText={(value) => {
+                        setLoginData((prState) => ({
+                          ...prState,
+                          password: value,
+                        }));
+                      }}
+                      secureTextEntry={hidePassword}
+                    />
+                    <TouchableOpacity
+                      style={styles.showPassBtn}
+                      onPress={() => {
+                        setHidePassword((prev) => !prev);
+                      }}
+                    >
+                      <Text style={styles.showPassTitle}>Показать</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </KeyboardAvoidingView>
+
+              {isShowKeyboard ? (
+                ""
+              ) : (
+                <>
+                  <TouchableOpacity
+                    style={styles.btn}
+                    onPress={() => {
+                      console.log(loginData);
+                      setLoginData(initialState);
+                    }}
+                  >
+                    <Text style={styles.btnText}>Войти</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Register")}
+                  >
+                    <Text style={styles.regNav}>
+                      Нет аккаунта? Зарегистрироваться
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </View>
+          </View>
+        </BackgroundImageMountain>
       </View>
-    </BackgroundImageMountain>
+    </TouchableWithoutFeedback>
   );
 };
 

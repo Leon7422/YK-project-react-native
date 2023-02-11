@@ -1,28 +1,7 @@
-import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Text,
-  View,
-  ImageBackground,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native";
-import LoginScreen from "./screens/LoginScreen";
-import RegisterForm from "./screens/RegisterScreen";
-import HomeScreen from "./screens/HomeScreen";
+import { NavigationContainer } from "@react-navigation/native";
+import useRoute from "./helpers/useRoute";
 
 export default function App() {
-  return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={{ ...styles.container }}>
-        <HomeScreen />
-      </View>
-    </TouchableWithoutFeedback>
-  );
+  const routing = useRoute(true);
+  return <NavigationContainer>{routing}</NavigationContainer>;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

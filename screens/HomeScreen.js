@@ -4,7 +4,7 @@ import images from "../components/SVG";
 
 const HomeScreen = () => {
   const windowHeight = Dimensions.get("window").height;
-  const galleryHeight = windowHeight - 88 - 83;
+  const galleryHeight = windowHeight - 88;
   const { SvgExit, SvgGrid, SvgPerson, SvgPlus } = images;
   return (
     <View style={styles.container}>
@@ -15,19 +15,6 @@ const HomeScreen = () => {
         </View>
       </View>
       <View style={{ ...styles.gallery, height: galleryHeight }}></View>
-      <View style={styles.footer}>
-        <View style={styles.buttonsList}>
-          <View style={{ marginRight: 39 }}>
-            <SvgGrid />
-          </View>
-          <View style={styles.svgPlusBtn}>
-            <SvgPlus />
-          </View>
-          <View style={{ marginLeft: 39 }}>
-            <SvgPerson />
-          </View>
-        </View>
-      </View>
     </View>
   );
 };
