@@ -7,7 +7,7 @@ import images from "../components/SVG";
 import { Feather } from "@expo/vector-icons";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useKeyboard } from "./useKeyboard";
 
 const AuthStack = createStackNavigator();
@@ -15,8 +15,8 @@ const MainTab = createBottomTabNavigator();
 
 const { SvgGrid, SvgPerson, SvgPlus } = images;
 
-const colorChanger = (focused) => {
-  if (focused === true) {
+const colorChanger = (focused, setPostActive) => {
+  if (focused) {
     return "blue";
   } else {
     return "#FFF";
@@ -25,7 +25,8 @@ const colorChanger = (focused) => {
 
 const useRoute = (isAuth) => {
   const heightKeyboard = useKeyboard();
-  const [isShowKeyBoard, setIsShowKeyboard] = useState(false);
+  const [postActive, setPostActive] = useState(false);
+
   if (!isAuth) {
     return (
       <AuthStack.Navigator>
@@ -51,7 +52,7 @@ const useRoute = (isAuth) => {
           backgroundColor: "#FFF",
           shadowColor: 0,
 
-          height: heightKeyboard === 0 ? 70 : 0,
+          height: postActive ? 0 : 70,
           paddingTop: heightKeyboard === 0 ? 15 : 0,
           paddingBottom: heightKeyboard === 0 ? 15 : 0,
           paddingLeft: 45,
@@ -74,16 +75,17 @@ const useRoute = (isAuth) => {
         }}
       />
       <MainTab.Screen
-        isShowKeyBoard={isShowKeyBoard}
-        setIsShowKeyboard={setIsShowKeyboard}
         name="Post"
         component={PostScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused, size, color }) => {
-            if (heightKeyboard === 0) {
-              return <SvgPlus size={size} color={colorChanger(focused)} />;
-            }
+            return (
+              <SvgPlus
+                size={size}
+                color={colorChanger(focused, setPostActive)}
+              />
+            );
           },
 
           tabBarIconStyle: {

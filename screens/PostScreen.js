@@ -8,7 +8,7 @@ import {
   Keyboard,
 } from "react-native";
 import { useState, useEffect } from "react";
-
+import { useIsFocused } from "@react-navigation/native";
 import UploadPostImage from "../components/UploadPostImage";
 import images from "../components/SVG";
 
@@ -21,6 +21,7 @@ const initialState = {
 const PostScreen = ({ navigation }) => {
   const { SvgLocation, SvgArrowBack } = images;
   const [postData, setPostData] = useState(initialState);
+  const focused = useIsFocused();
 
   const buttonSubmitColorMaker = () => {
     if (postData.image && postData.postName) {
