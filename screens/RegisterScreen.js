@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
   Text,
@@ -21,7 +22,7 @@ const initialState = {
   nick: "",
 };
 
-const RegisterForm = ({ navigation }) => {
+const RegisterForm = ({ setIsAuth }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [loginData, setLoginData] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -30,6 +31,7 @@ const RegisterForm = ({ navigation }) => {
     useState("#E8E8E8");
   const [borderInputColorNick, setBorderInputColorNick] = useState("#E8E8E8");
   const heightKeyboard = useKeyboard();
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (heightKeyboard === 0) {
@@ -146,6 +148,7 @@ const RegisterForm = ({ navigation }) => {
                     onPress={() => {
                       console.log(loginData);
                       setLoginData(initialState);
+                      setIsAuth(true);
                     }}
                   >
                     <Text style={styles.btnText}>Зарегистрироваться</Text>

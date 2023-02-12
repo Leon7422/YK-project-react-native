@@ -12,13 +12,14 @@ import {
 } from "react-native";
 import BackgroundImageMountain from "../components/ImageBackgroundMountain";
 import { useKeyboard } from "../helpers/useKeyboard";
+import { useNavigation } from "@react-navigation/native";
 
 const initialState = {
   email: "",
   password: "",
 };
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({ setIsAuth }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [loginData, setLoginData] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -26,6 +27,7 @@ const LoginScreen = ({ navigation }) => {
   const [borderInputColorPassword, setBorderInputColorPassword] =
     useState("#E8E8E8");
   const heightKeyboard = useKeyboard();
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (heightKeyboard === 0) {
@@ -116,6 +118,7 @@ const LoginScreen = ({ navigation }) => {
                     onPress={() => {
                       console.log(loginData);
                       setLoginData(initialState);
+                      setIsAuth(true);
                     }}
                   >
                     <Text style={styles.btnText}>Войти</Text>

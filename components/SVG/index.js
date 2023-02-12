@@ -5,6 +5,9 @@ import SvgPlus from "./SvgPlus";
 import SvgPhotocamera from "./SvgPhotocamera";
 import SvgLocation from "./SvgLocation";
 import SvgArrowBack from "./SvgArrowBack";
+import SvgLike from "./SvgLike";
+import SvgComment from "./SvgComment";
+import SvgTrash from "./SvgTrash";
 
 const images = {
   SvgExit,
@@ -14,6 +17,9 @@ const images = {
   SvgPhotocamera,
   SvgLocation,
   SvgArrowBack,
+  SvgLike,
+  SvgComment,
+  SvgTrash,
 };
 
 export default images;

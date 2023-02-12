@@ -11,11 +11,11 @@ import * as ImagePicker from "expo-image-picker";
 import images from "./SVG";
 import { useKeyboard } from "../helpers/useKeyboard";
 
-export default function UploadPostImage({ setPostData }) {
+export default function UploadPostImage({ setPostData, image, setImage }) {
   const windowWidth = Dimensions.get("window").width;
   const heightKeyboard = useKeyboard();
   const { SvgPhotocamera } = images;
-  const [image, setImage] = useState(null);
+
   const addImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,

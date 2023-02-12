@@ -7,8 +7,9 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { useState, useEffect } from "react";
-import { useIsFocused } from "@react-navigation/native";
+import { useState } from "react";
+import { useKeyboard } from "../helpers/useKeyboard";
+
 import UploadPostImage from "../components/UploadPostImage";
 import images from "../components/SVG";
 
@@ -19,9 +20,15 @@ const initialState = {
 };
 
 const PostScreen = ({ navigation }) => {
-  const { SvgLocation, SvgArrowBack } = images;
+  const [image, setImage] = useState(null);
+  const { SvgLocation, SvgArrowBack, SvgTrash } = images;
   const [postData, setPostData] = useState(initialState);
-  const focused = useIsFocused();
+  const heightKeyboard = useKeyboard();
+
+  const clearState = () => {
+    setPostData(initialState);
+    setImage(null);
+  };
 
   const buttonSubmitColorMaker = () => {
     if (postData.image && postData.postName) {
@@ -52,7 +59,11 @@ const PostScreen = ({ navigation }) => {
         </View>
         <View style={styles.main}>
           <View style={{ marginTop: 32 }}>
-            <UploadPostImage setPostData={setPostData} />
+            <UploadPostImage
+              setPostData={setPostData}
+              image={image}
+              setImage={setImage}
+            />
           </View>
           <View style={styles.inputWrapperPostName}>
             <TextInput
@@ -105,6 +116,27 @@ const PostScreen = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
         </View>
+        {heightKeyboard !== 0 ? (
+          ""
+        ) : (
+          <TouchableOpacity
+            style={[
+              styles.resetButton,
+              {
+                transform: [{ translateX: -35 }],
+                backgroundColor:
+                  postData.image && postData.postName ? "#FF6C00" : "#F6F6F6",
+              },
+            ]}
+            onPress={clearState}
+          >
+            <SvgTrash
+              color={
+                postData.image && postData.postName ? "#FFFFFF" : "#BDBDBD"
+              }
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </TouchableWithoutFeedback>
   );
@@ -179,6 +211,18 @@ const styles = StyleSheet.create({
   },
 
   textButtonPost: { fontSize: 16, lineHeight: 19 },
+
+  resetButton: {
+    width: 70,
+    height: 40,
+    backgroundColor: "red",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    bottom: 40,
+    left: "50%",
+    borderRadius: 20,
+  },
 });
 
 export default PostScreen;

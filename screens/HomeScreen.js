@@ -1,18 +1,21 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Dimensions } from "react-native";
 import images from "../components/SVG";
 
-const HomeScreen = () => {
+const HomeScreen = ({ setIsAuth }) => {
   const windowHeight = Dimensions.get("window").height;
   const galleryHeight = windowHeight - 88;
-  const { SvgExit, SvgGrid, SvgPerson, SvgPlus } = images;
+  const { SvgExit } = images;
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Публікації</Text>
-        <View style={styles.svgExit}>
+        <TouchableOpacity
+          onPress={() => setIsAuth(false)}
+          style={styles.svgExit}
+        >
           <SvgExit />
-        </View>
+        </TouchableOpacity>
       </View>
       <View style={{ ...styles.gallery, height: galleryHeight }}></View>
     </View>

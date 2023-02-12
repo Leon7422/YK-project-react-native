@@ -23,23 +23,20 @@ const colorChanger = (focused, setPostActive) => {
   }
 };
 
-const useRoute = (isAuth) => {
+const useRoute = () => {
   const heightKeyboard = useKeyboard();
   const [postActive, setPostActive] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
 
   if (!isAuth) {
     return (
       <AuthStack.Navigator>
-        <AuthStack.Screen
-          name="Login"
-          options={{ headerShown: false }}
-          component={LoginScreen}
-        />
-        <AuthStack.Screen
-          name="Register"
-          options={{ headerShown: false }}
-          component={RegisterScreen}
-        />
+        <AuthStack.Screen name="Login" options={{ headerShown: false }}>
+          {() => <LoginScreen setIsAuth={setIsAuth} />}
+        </AuthStack.Screen>
+        <AuthStack.Screen name="Register" options={{ headerShown: false }}>
+          {() => <RegisterScreen setIsAuth={setIsAuth} />}
+        </AuthStack.Screen>
       </AuthStack.Navigator>
     );
   }
@@ -64,7 +61,6 @@ const useRoute = (isAuth) => {
     >
       <MainTab.Screen
         name="Home"
-        component={HomeScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused, size, color }) => {
@@ -73,11 +69,14 @@ const useRoute = (isAuth) => {
             }
           },
         }}
-      />
+      >
+        {() => <HomeScreen setIsAuth={setIsAuth} />}
+      </MainTab.Screen>
       <MainTab.Screen
         name="Post"
         component={PostScreen}
         options={{
+          tabBarStyle: { display: "none" },
           headerShown: false,
           tabBarIcon: ({ focused, size, color }) => {
             return (
@@ -99,7 +98,6 @@ const useRoute = (isAuth) => {
       />
       <MainTab.Screen
         name="Profile"
-        component={ProfileScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused, size, color }) => {
@@ -108,7 +106,9 @@ const useRoute = (isAuth) => {
             }
           },
         }}
-      />
+      >
+        {() => <ProfileScreen setIsAuth={setIsAuth} />}
+      </MainTab.Screen>
     </MainTab.Navigator>
   );
 };
