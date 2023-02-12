@@ -30,7 +30,6 @@ const LoginScreen = ({ navigation }) => {
   useEffect(() => {
     if (heightKeyboard === 0) {
       setIsShowKeyboard(false);
-      console.log(navigation);
     }
   }, [heightKeyboard]);
 

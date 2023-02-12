@@ -8,6 +8,7 @@ import { Feather } from "@expo/vector-icons";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useState } from "react";
+import { useKeyboard } from "./useKeyboard";
 
 const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
@@ -23,6 +24,7 @@ const colorChanger = (focused) => {
 };
 
 const useRoute = (isAuth) => {
+  const heightKeyboard = useKeyboard();
   const [isShowKeyBoard, setIsShowKeyboard] = useState(false);
   if (!isAuth) {
     return (
@@ -49,9 +51,9 @@ const useRoute = (isAuth) => {
           backgroundColor: "#FFF",
           shadowColor: 0,
 
-          height: 70,
-          paddingTop: 15,
-          paddingBottom: 15,
+          height: heightKeyboard === 0 ? 70 : 0,
+          paddingTop: heightKeyboard === 0 ? 15 : 0,
+          paddingBottom: heightKeyboard === 0 ? 15 : 0,
           paddingLeft: 45,
           paddingRight: 45,
           borderTopWidth: 1,
@@ -64,9 +66,11 @@ const useRoute = (isAuth) => {
         component={HomeScreen}
         options={{
           headerShown: false,
-          tabBarIcon: ({ focused, size, color }) => (
-            <SvgGrid size={size} color={color} />
-          ),
+          tabBarIcon: ({ focused, size, color }) => {
+            if (heightKeyboard === 0) {
+              return <SvgGrid size={size} color={color} />;
+            }
+          },
         }}
       />
       <MainTab.Screen
@@ -76,9 +80,12 @@ const useRoute = (isAuth) => {
         component={PostScreen}
         options={{
           headerShown: false,
-          tabBarIcon: ({ focused, size, color }) => (
-            <SvgPlus size={size} color={colorChanger(focused)} />
-          ),
+          tabBarIcon: ({ focused, size, color }) => {
+            if (heightKeyboard === 0) {
+              return <SvgPlus size={size} color={colorChanger(focused)} />;
+            }
+          },
+
           tabBarIconStyle: {
             backgroundColor: "#FF6C00",
             width: 70,
@@ -93,9 +100,11 @@ const useRoute = (isAuth) => {
         component={ProfileScreen}
         options={{
           headerShown: false,
-          tabBarIcon: ({ focused, size, color }) => (
-            <SvgPerson size={size} color={color} />
-          ),
+          tabBarIcon: ({ focused, size, color }) => {
+            if (heightKeyboard === 0) {
+              return <SvgPerson size={size} color={color} />;
+            }
+          },
         }}
       />
     </MainTab.Navigator>

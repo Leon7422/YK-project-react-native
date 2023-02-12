@@ -1,20 +1,12 @@
-import React, { useState, useEffect } from "react";
-import {
-  Image,
-  View,
-  Platform,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-} from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { Image, View, TouchableOpacity, StyleSheet } from "react-native";
+
 import * as ImagePicker from "expo-image-picker";
 import Svg, { Circle, Path } from "react-native-svg";
 
 export default function UploadAvatarImage() {
   const [image, setImage] = useState(null);
   const addImage = async () => {
-    console.log("start");
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,

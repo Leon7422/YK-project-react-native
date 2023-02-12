@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Image,
   View,
-  Platform,
   TouchableOpacity,
   Text,
   StyleSheet,
+  Dimensions,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import images from "./SVG";
+import { useKeyboard } from "../helpers/useKeyboard";
 
-export default function UploadPostImage() {
+export default function UploadPostImage({ setPostData }) {
+  const windowWidth = Dimensions.get("window").width;
+  const heightKeyboard = useKeyboard();
   const { SvgPhotocamera } = images;
   const [image, setImage] = useState(null);
   const addImage = async () => {
@@ -21,29 +24,51 @@ export default function UploadPostImage() {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
+      setPostData((prState) => ({
+        ...prState,
+        image: result.assets[0].uri,
+      }));
       setImage(result.assets[0].uri);
+    }
+  };
+  const colorForCamera = (image) => {
+    if (image) {
+      return "#FFF";
+    } else {
+      return "#BDBDBD";
     }
   };
   return (
     <>
       <TouchableOpacity onPress={addImage}>
-        <View style={imageUploaderStyles.container}>
+        <View
+          style={{
+            ...imageUploaderStyles.container,
+            height: heightKeyboard === 0 ? 240 : 80,
+          }}
+        >
           {image && (
             <Image
               source={{ uri: image }}
-              style={{ width: 120, height: 120 }}
+              style={{
+                width: windowWidth - 32,
+                height: heightKeyboard === 0 ? 240 : 80,
+                borderRadius: 8,
+              }}
             />
           )}
-          <TouchableOpacity>
-            <View style={imageUploaderStyles.uploadBtnContainer}>
-              <View style={imageUploaderStyles.cameraBackgroung}>
-                <SvgPhotocamera />
-              </View>
+
+          <View
+            style={[
+              imageUploaderStyles.uploadBtnContainer,
+              { transform: [{ translateX: -30 }, { translateY: -30 }] },
+            ]}
+          >
+            <View style={imageUploaderStyles.cameraBackgroung}>
+              <SvgPhotocamera color={colorForCamera(image)} />
             </View>
-          </TouchableOpacity>
+          </View>
         </View>
       </TouchableOpacity>
       <Text style={imageUploaderStyles.editText}>
@@ -54,7 +79,6 @@ export default function UploadPostImage() {
 }
 const imageUploaderStyles = StyleSheet.create({
   container: {
-    height: 240,
     borderWidth: 1,
     borderStyle: "solid",
     borderColor: "#E8E8E8",
@@ -63,9 +87,11 @@ const imageUploaderStyles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
+    position: "relative",
   },
+  uploadBtnContainer: { position: "absolute", top: "50%", left: "50%" },
   cameraBackgroung: {
-    backgroundColor: "#FFF",
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
     width: 60,
     height: 60,
     borderRadius: 90,
