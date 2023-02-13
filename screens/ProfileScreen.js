@@ -2,10 +2,7 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableWithoutFeedback,
-  Keyboard,
   Image,
-  ScrollView,
   SafeAreaView,
   Dimensions,
   TouchableOpacity,
@@ -103,7 +100,9 @@ const backEnd = [
 
 const ProfileScreen = ({ setIsAuth }) => {
   const { SvgLike, SvgComment, SvgLocation, SvgExit } = images;
+  const navigation = useNavigation();
   const windowWidth = Dimensions.get("window").width;
+  console.log(navigation);
   return (
     <ImageBackgroundMountain>
       <SafeAreaView>
@@ -147,12 +146,15 @@ const ProfileScreen = ({ setIsAuth }) => {
                     marginTop: 10,
                   }}
                 >
-                  <View style={{ flexDirection: "row" }}>
+                  <TouchableOpacity
+                    style={{ flexDirection: "row" }}
+                    onPress={() => navigation.navigate("CommentNav")}
+                  >
                     <SvgComment />
                     <Text style={{ ...styles.text, marginLeft: 5 }}>
                       {item.commnets.length}
                     </Text>
-                  </View>
+                  </TouchableOpacity>
                   <View style={{ flexDirection: "row", marginLeft: 30 }}>
                     <SvgLike />
                     <Text style={{ ...styles.text, marginLeft: 5 }}>

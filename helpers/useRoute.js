@@ -1,17 +1,19 @@
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import HomeScreen from "../screens/HomeScreen";
-import ProfileScreen from "../screens/ProfileScreen";
+/* import ProfileScreen from "../screens/ProfileScreen"; */
 import PostScreen from "../screens/PostScreen";
 import images from "../components/SVG";
-import { Feather } from "@expo/vector-icons";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useKeyboard } from "./useKeyboard";
+/* import CommentScreen from "../screens/CommentScreen"; */
+import ProfileScreenNav from "./useProfileNavigator";
 
 const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
+const OtherStack = createStackNavigator();
 
 const { SvgGrid, SvgPerson, SvgPlus } = images;
 
@@ -41,75 +43,77 @@ const useRoute = () => {
     );
   }
   return (
-    <MainTab.Navigator
-      screenOptions={{
-        tabBarActiveTintColor: "blue",
-        tabBarShowLabel: false,
-        tabBarStyle: {
-          backgroundColor: "#FFF",
-          shadowColor: 0,
+    <>
+      <MainTab.Navigator
+        screenOptions={{
+          tabBarActiveTintColor: "blue",
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            backgroundColor: "#FFF",
+            shadowColor: 0,
 
-          height: postActive ? 0 : 70,
-          paddingTop: heightKeyboard === 0 ? 15 : 0,
-          paddingBottom: heightKeyboard === 0 ? 15 : 0,
-          paddingLeft: 45,
-          paddingRight: 45,
-          borderTopWidth: 1,
-          borderTopColor: "#b3b3b3",
-        },
-      }}
-    >
-      <MainTab.Screen
-        name="Home"
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ focused, size, color }) => {
-            if (heightKeyboard === 0) {
-              return <SvgGrid size={size} color={color} />;
-            }
+            height: postActive ? 0 : 70,
+            paddingTop: heightKeyboard === 0 ? 15 : 0,
+            paddingBottom: heightKeyboard === 0 ? 15 : 0,
+            paddingLeft: 45,
+            paddingRight: 45,
+            borderTopWidth: 1,
+            borderTopColor: "#b3b3b3",
           },
         }}
       >
-        {() => <HomeScreen setIsAuth={setIsAuth} />}
-      </MainTab.Screen>
-      <MainTab.Screen
-        name="Post"
-        component={PostScreen}
-        options={{
-          tabBarStyle: { display: "none" },
-          headerShown: false,
-          tabBarIcon: ({ focused, size, color }) => {
-            return (
-              <SvgPlus
-                size={size}
-                color={colorChanger(focused, setPostActive)}
-              />
-            );
-          },
+        <MainTab.Screen
+          name="Home"
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ focused, size, color }) => {
+              if (heightKeyboard === 0) {
+                return <SvgGrid size={size} color={color} />;
+              }
+            },
+          }}
+        >
+          {() => <HomeScreen setIsAuth={setIsAuth} />}
+        </MainTab.Screen>
+        <MainTab.Screen
+          name="Post"
+          component={PostScreen}
+          options={{
+            tabBarStyle: { display: "none" },
+            headerShown: false,
+            tabBarIcon: ({ focused, size, color }) => {
+              return (
+                <SvgPlus
+                  size={size}
+                  color={colorChanger(focused, setPostActive)}
+                />
+              );
+            },
 
-          tabBarIconStyle: {
-            backgroundColor: "#FF6C00",
-            width: 70,
-            borderRadius: 20,
-            alignItems: "center",
-            justifyContent: "center",
-          },
-        }}
-      />
-      <MainTab.Screen
-        name="Profile"
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ focused, size, color }) => {
-            if (heightKeyboard === 0) {
-              return <SvgPerson size={size} color={color} />;
-            }
-          },
-        }}
-      >
-        {() => <ProfileScreen setIsAuth={setIsAuth} />}
-      </MainTab.Screen>
-    </MainTab.Navigator>
+            tabBarIconStyle: {
+              backgroundColor: "#FF6C00",
+              width: 70,
+              borderRadius: 20,
+              alignItems: "center",
+              justifyContent: "center",
+            },
+          }}
+        />
+        <MainTab.Screen
+          name="Profile"
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ focused, size, color }) => {
+              if (heightKeyboard === 0) {
+                return <SvgPerson size={size} color={color} />;
+              }
+            },
+          }}
+        >
+          {() => <ProfileScreenNav setIsAuth={setIsAuth} />}
+        </MainTab.Screen>
+      </MainTab.Navigator>
+    </>
   );
 };
 
