@@ -6,8 +6,10 @@ import {
   Keyboard,
   Image,
   ScrollView,
+  SafeAreaView,
   Dimensions,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import * as React from "react";
 import UploadAvatarImage from "../components/UploadAvatarImage";
@@ -101,17 +103,15 @@ const backEnd = [
 
 const ProfileScreen = ({ setIsAuth }) => {
   const { SvgLike, SvgComment, SvgLocation, SvgExit } = images;
-  const windowHeight = Dimensions.get("window").height;
   const windowWidth = Dimensions.get("window").width;
   return (
-    <ScrollView>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={{ flex: 1 }}>
-          <ImageBackgroundMountain>
+    <ImageBackgroundMountain>
+      <SafeAreaView>
+        <FlatList
+          ListHeaderComponent={
             <View
               style={{
                 ...styles.container,
-                minHeight: windowHeight,
               }}
             >
               <UploadAvatarImage />
@@ -128,59 +128,58 @@ const ProfileScreen = ({ setIsAuth }) => {
                   <SvgExit />
                 </TouchableOpacity>
               </View>
-
-              <View style={styles.main}>
-                {backEnd.map((item) => {
-                  return (
-                    <View key={item.id} style={styles.galletyItem}>
-                      <View>
-                        <Image
-                          source={{ uri: item.photoURL }}
-                          style={{ ...styles.image }}
-                        />
-                      </View>
-                      <Text style={styles.photoName}>{item.photoAlt}</Text>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          marginTop: 10,
-                        }}
-                      >
-                        <View style={{ flexDirection: "row" }}>
-                          <SvgComment />
-                          <Text style={{ ...styles.text, marginLeft: 5 }}>
-                            {item.commnets.length}
-                          </Text>
-                        </View>
-                        <View style={{ flexDirection: "row", marginLeft: 30 }}>
-                          <SvgLike />
-                          <Text style={{ ...styles.text, marginLeft: 5 }}>
-                            {item.likesQuantity}
-                          </Text>
-                        </View>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            position: "absolute",
-                            top: 0,
-                            right: 0,
-                          }}
-                        >
-                          <SvgLocation />
-                          <Text style={{ ...styles.text, marginLeft: 8 }}>
-                            {item.location}
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  );
-                })}
+            </View>
+          }
+          data={backEnd}
+          renderItem={({ item }) => (
+            <View style={{ width: windowWidth, backgroundColor: "#FFFFFF" }}>
+              <View style={{ ...styles.galletyItem }}>
+                <View>
+                  <Image
+                    source={{ uri: item.photoURL }}
+                    style={{ ...styles.image }}
+                  />
+                </View>
+                <Text style={styles.photoName}>{item.photoAlt}</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    marginTop: 10,
+                  }}
+                >
+                  <View style={{ flexDirection: "row" }}>
+                    <SvgComment />
+                    <Text style={{ ...styles.text, marginLeft: 5 }}>
+                      {item.commnets.length}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row", marginLeft: 30 }}>
+                    <SvgLike />
+                    <Text style={{ ...styles.text, marginLeft: 5 }}>
+                      {item.likesQuantity}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      position: "absolute",
+                      top: 0,
+                      right: 0,
+                    }}
+                  >
+                    <SvgLocation />
+                    <Text style={{ ...styles.text, marginLeft: 8 }}>
+                      {item.location}
+                    </Text>
+                  </View>
+                </View>
               </View>
             </View>
-          </ImageBackgroundMountain>
-        </View>
-      </TouchableWithoutFeedback>
-    </ScrollView>
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      </SafeAreaView>
+    </ImageBackgroundMountain>
   );
 };
 
@@ -209,7 +208,7 @@ const styles = StyleSheet.create({
   },
   galletyItem: {
     marginHorizontal: 16,
-    marginTop: 40,
+    marginBottom: 40,
   },
   image: {
     height: 240,
