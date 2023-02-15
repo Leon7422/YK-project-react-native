@@ -1,19 +1,19 @@
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import HomeScreen from "../screens/HomeScreen";
-/* import ProfileScreen from "../screens/ProfileScreen"; */
+
 import PostScreen from "../screens/PostScreen";
 import images from "../components/SVG";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useState } from "react";
 import { useKeyboard } from "./useKeyboard";
-/* import CommentScreen from "../screens/CommentScreen"; */
-import ProfileScreenNav from "./useProfileNavigator";
+import HomeNavigator from "../bottomTabNavigators/homeNavigator";
+import ProfileNavigator from "../bottomTabNavigators/profileNavigator";
+import getActiveRouteState from "./getActiveRouteState";
 
 const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
-const OtherStack = createStackNavigator();
 
 const { SvgGrid, SvgPerson, SvgPlus } = images;
 
@@ -73,7 +73,7 @@ const useRoute = () => {
             },
           }}
         >
-          {() => <HomeScreen setIsAuth={setIsAuth} />}
+          {() => <HomeNavigator setIsAuth={setIsAuth} />}
         </MainTab.Screen>
         <MainTab.Screen
           name="Post"
@@ -101,16 +101,37 @@ const useRoute = () => {
         />
         <MainTab.Screen
           name="Profile"
-          options={{
-            headerShown: false,
-            tabBarIcon: ({ focused, size, color }) => {
-              if (heightKeyboard === 0) {
+          options={({ navigation }) => {
+            let navName = null;
+            if (navigation?.getState()) {
+              navName = getActiveRouteState(
+                getActiveRouteState(navigation?.getState())?.state
+              )?.name;
+            }
+            return {
+              headerShown: false,
+              tabBarIcon: ({ focused, size, color }) => {
                 return <SvgPerson size={size} color={color} />;
-              }
-            },
+              },
+              tabBarStyle:
+                navName === "CommentNav"
+                  ? { display: "none" }
+                  : {
+                      backgroundColor: "#FFF",
+                      shadowColor: 0,
+
+                      height: postActive ? 0 : 70,
+                      paddingTop: heightKeyboard === 0 ? 15 : 0,
+                      paddingBottom: heightKeyboard === 0 ? 15 : 0,
+                      paddingLeft: 45,
+                      paddingRight: 45,
+                      borderTopWidth: 1,
+                      borderTopColor: "#b3b3b3",
+                    },
+            };
           }}
         >
-          {() => <ProfileScreenNav setIsAuth={setIsAuth} />}
+          {() => <ProfileNavigator setIsAuth={setIsAuth} />}
         </MainTab.Screen>
       </MainTab.Navigator>
     </>

@@ -8,96 +8,15 @@ import {
 } from "react-native";
 import { Dimensions } from "react-native";
 import images from "../components/SVG";
-
-const backEnd = [
-  {
-    id: 1,
-    userName: "Natali Romanova",
-    photoURL:
-      "https://cdn.pixabay.com/photo/2021/12/29/08/18/insect-6900940_960_720.jpg",
-    photoAlt: "Jungle",
-    commnets: [
-      {
-        author: "Random Guy",
-        comment: "Hello",
-      },
-      {
-        author: "Natali Romanova",
-        comment: "Hi",
-      },
-      {
-        author: "Random Guy",
-        comment: "How are you?",
-      },
-      {
-        author: "Natali Romanova",
-        comment: "Im fine thnanks",
-      },
-    ],
-    likesQuantity: 182,
-    location: "Ukraine",
-  },
-  {
-    id: 2,
-    userName: "Natali Romanova",
-    photoURL:
-      "https://cdn.pixabay.com/photo/2021/12/29/08/18/insect-6900940_960_720.jpg",
-    photoAlt: "Jungle",
-    commnets: [
-      {
-        author: "Random Guy",
-        comment: "Hello",
-      },
-      {
-        author: "Natali Romanova",
-        comment: "Hi",
-      },
-      {
-        author: "Random Guy",
-        comment: "How are you?",
-      },
-      {
-        author: "Natali Romanova",
-        comment: "Im fine thnanks",
-      },
-    ],
-    likesQuantity: 182,
-    location: "Ukraine",
-  },
-  {
-    id: 3,
-    userName: "Natali Romanova",
-    photoURL:
-      "https://cdn.pixabay.com/photo/2021/12/29/08/18/insect-6900940_960_720.jpg",
-    photoAlt: "Jungle",
-    commnets: [
-      {
-        author: "Random Guy",
-        comment: "Hello",
-      },
-      {
-        author: "Natali Romanova",
-        comment: "Hi",
-      },
-      {
-        author: "Random Guy",
-        comment: "How are you?",
-      },
-      {
-        author: "Natali Romanova",
-        comment: "Im fine thnanks",
-      },
-    ],
-    likesQuantity: 182,
-    location: "Ukraine",
-  },
-];
+import { useNavigation } from "@react-navigation/native";
+import backEnd from "../helpers/backEnd";
 
 const HomeScreen = ({ setIsAuth }) => {
   const windowHeight = Dimensions.get("window").height;
   const galleryHeight = windowHeight - 88;
   const windowWidth = Dimensions.get("window").width;
   const { SvgExit, SvgLike, SvgComment, SvgLocation } = images;
+  const navigation = useNavigation();
   return (
     <FlatList
       ListHeaderComponent={
@@ -161,12 +80,15 @@ const HomeScreen = ({ setIsAuth }) => {
                 marginTop: 10,
               }}
             >
-              <View style={{ flexDirection: "row" }}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("CommentNav")}
+                style={{ flexDirection: "row" }}
+              >
                 <SvgComment />
                 <Text style={{ ...styles.text, marginLeft: 5 }}>
                   {item.commnets.length}
                 </Text>
-              </View>
+              </TouchableOpacity>
               <View style={{ flexDirection: "row", marginLeft: 30 }}>
                 <SvgLike />
                 <Text style={{ ...styles.text, marginLeft: 5 }}>
