@@ -1,4 +1,4 @@
-const backEnd = [
+const userBackEnd = [
   {
     id: 1,
     userName: "Natali Romanova",
@@ -82,4 +82,4 @@ const backEnd = [
   },
 ];
 
-export default backEnd;
+export default userBackEnd;

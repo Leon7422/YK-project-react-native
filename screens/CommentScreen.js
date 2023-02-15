@@ -6,62 +6,15 @@ import {
   FlatList,
   Image,
   TextInput,
-  TouchableWithoutFeedback,
-  Keyboard,
   SafeAreaView,
+  Dimensions,
 } from "react-native";
-import { Dimensions } from "react-native";
 import images from "../components/SVG";
 import { useNavigation } from "@react-navigation/native";
-import { useKeyboard } from "../helpers/useKeyboard";
-
+import commentBackEnd from "../helpers/commentBackEnd";
 import { useState } from "react";
 
-const backEnd = {
-  photoURL:
-    "https://cdn.pixabay.com/photo/2021/12/29/08/18/insect-6900940_960_720.jpg",
-  commnets: [
-    {
-      id: 1,
-      author: "Random Guy",
-      comment:
-        "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
-      timeStamp: "2094-09-02 10:32:18",
-      ownerAvatar:
-        "https://cdn.pixabay.com/photo/2017/08/01/12/14/man-2564902_960_720.jpg",
-    },
-    {
-      id: 2,
-      author: "Natali Romanova",
-      comment:
-        "Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis.",
-      timeStamp: "1994-10-04 00:46:30",
-      ownerAvatar:
-        "https://cdn.pixabay.com/photo/2016/03/23/04/01/woman-1274056_960_720.jpg",
-    },
-    {
-      id: 3,
-      author: "Random Guy",
-      comment:
-        "Ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
-      timeStamp: "2040-10-15 18:44:35",
-      ownerAvatar:
-        "https://cdn.pixabay.com/photo/2017/08/01/12/14/man-2564902_960_720.jpg",
-    },
-    {
-      id: 4,
-      author: "Natali Romanova",
-      comment:
-        "In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.",
-      timeStamp: "1979-10-21 13:23:53",
-      ownerAvatar:
-        "https://cdn.pixabay.com/photo/2016/03/23/04/01/woman-1274056_960_720.jpg",
-    },
-  ],
-  likesQuantity: 182,
-  location: "Ukraine",
-};
-const CommentScreen = ({ setIsAuth }) => {
+const CommentScreen = () => {
   const [comment, setComment] = useState("");
   const navigation = useNavigation();
   const windowWidth = Dimensions.get("window").width;
@@ -72,7 +25,7 @@ const CommentScreen = ({ setIsAuth }) => {
       <FlatList
         style={{ minHeight: "100%", backgroundColor: "#FFFFFF" }}
         ListHeaderComponent={
-          <View style={{ ...styles.container }}>
+          <View style={styles.container}>
             <View style={styles.header}>
               <Text style={styles.headerTitle}>Коментарі</Text>
               <TouchableOpacity
@@ -82,13 +35,15 @@ const CommentScreen = ({ setIsAuth }) => {
                 <SvgArrowBack />
               </TouchableOpacity>
             </View>
-            <View style={{ ...styles.gallery }}></View>
             <View>
-              <Image source={{ uri: backEnd.photoURL }} style={styles.image} />
+              <Image
+                source={{ uri: commentBackEnd.photoURL }}
+                style={styles.image}
+              />
             </View>
           </View>
         }
-        data={backEnd.commnets}
+        data={commentBackEnd.commnets}
         renderItem={({ item }) => {
           const ownerCheck = item.author === "Natali Romanova";
           return (
@@ -111,12 +66,7 @@ const CommentScreen = ({ setIsAuth }) => {
                 </View>
                 <View
                   style={{
-                    backgroundColor: "#f7f7f7",
-                    padding: 16,
-                    borderBottomLeftRadius: 6,
-                    borderBottomRightRadius: 6,
-                    borderTopLeftRadius: 0,
-                    borderTopRightRadius: 6,
+                    ...styles.commentWrapper,
                     width: windowWidth - 32 - 15 - 30,
                   }}
                 >
@@ -126,10 +76,7 @@ const CommentScreen = ({ setIsAuth }) => {
 
                   <Text
                     style={{
-                      fontSize: 10,
-                      lineHeight: 12,
-                      color: "#BDBDBD",
-                      marginTop: 8,
+                      ...styles.timeStamp,
                       marginLeft: ownerCheck ? 0 : "auto",
                     }}
                   >
@@ -143,53 +90,20 @@ const CommentScreen = ({ setIsAuth }) => {
         ListFooterComponent={<View style={styles.containerListFooter}></View>}
         keyExtractor={(item) => item.id}
       />
-      <View
-        style={{
-          flex: 1,
-          position: "absolute",
-          bottom: 0,
-          width: "100%",
-          padding: 16,
-          backgroundColor: "#FFFFFF",
-        }}
-      >
+      <View style={styles.footerContainer}>
         <TextInput
           value={comment}
           onChangeText={(text) => setComment(text)}
           placeholderTextColor={"#BDBDBD"}
-          placeholderTextFontSize={50}
           placeholder="Коментувати..."
-          style={{
-            position: "relative",
-            width: "100%",
-            height: 50,
-            padding: 16,
-            fontWeight: "500",
-            fontSize: 16,
-            lineHeight: 19,
-            backgroundColor: "#F6F6F6",
-            color: "#212121",
-            borderWidth: 1,
-            borderColor: "#E8E8E8",
-            borderRadius: 100,
-          }}
+          style={styles.footerInput}
         />
         <TouchableOpacity
           onPress={() => {
             console.log(comment);
             setComment("");
           }}
-          style={{
-            width: 34,
-            height: 34,
-            backgroundColor: "#FF6C00",
-            position: "absolute",
-            right: 25,
-            top: "50%",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 100,
-          }}
+          style={styles.footerSubmitButton}
         >
           <SvgArrowUp />
         </TouchableOpacity>
@@ -239,9 +153,61 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 50,
   },
+
+  commentWrapper: {
+    backgroundColor: "#f7f7f7",
+    padding: 16,
+    borderBottomLeftRadius: 6,
+    borderBottomRightRadius: 6,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 6,
+  },
+  timeStamp: {
+    fontSize: 10,
+    lineHeight: 12,
+    color: "#BDBDBD",
+    marginTop: 8,
+  },
+
   containerListFooter: {
     height: 70,
     backgroundColor: "#FFFFFF",
+  },
+
+  // ======= Footer =======
+
+  footerContainer: {
+    flex: 1,
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    padding: 16,
+    backgroundColor: "#FFFFFF",
+  },
+  footerInput: {
+    position: "relative",
+    width: "100%",
+    height: 50,
+    padding: 16,
+    fontWeight: "500",
+    fontSize: 16,
+    lineHeight: 19,
+    backgroundColor: "#F6F6F6",
+    color: "#212121",
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
+    borderRadius: 100,
+  },
+  footerSubmitButton: {
+    width: 34,
+    height: 34,
+    backgroundColor: "#FF6C00",
+    position: "absolute",
+    right: 25,
+    top: "50%",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 100,
   },
 });
 

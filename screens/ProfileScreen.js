@@ -13,13 +13,12 @@ import UploadAvatarImage from "../components/UploadAvatarImage";
 import ImageBackgroundMountain from "../components/ImageBackgroundMountain";
 import images from "../components/SVG";
 import { useNavigation } from "@react-navigation/native";
-import backEnd from "../helpers/backEnd";
+import userBackEnd from "../helpers/userBackEnd";
 
 const ProfileScreen = ({ setIsAuth }) => {
   const { SvgLike, SvgComment, SvgLocation, SvgExit } = images;
   const navigation = useNavigation();
   const windowWidth = Dimensions.get("window").width;
-  console.log(navigation);
   return (
     <ImageBackgroundMountain>
       <SafeAreaView>
@@ -46,15 +45,12 @@ const ProfileScreen = ({ setIsAuth }) => {
               </View>
             </View>
           }
-          data={backEnd}
+          data={userBackEnd}
           renderItem={({ item }) => (
             <View style={{ width: windowWidth, backgroundColor: "#FFFFFF" }}>
-              <View style={{ ...styles.galletyItem }}>
+              <View style={styles.galletyItem}>
                 <View>
-                  <Image
-                    source={{ uri: item.photoURL }}
-                    style={{ ...styles.image }}
-                  />
+                  <Image source={{ uri: item.photoURL }} style={styles.image} />
                 </View>
                 <Text style={styles.photoName}>{item.photoAlt}</Text>
                 <View
@@ -64,30 +60,19 @@ const ProfileScreen = ({ setIsAuth }) => {
                   }}
                 >
                   <TouchableOpacity
-                    style={{ flexDirection: "row" }}
                     onPress={() => navigation.navigate("CommentNav")}
+                    style={{ flexDirection: "row" }}
                   >
                     <SvgComment />
-                    <Text style={{ ...styles.text, marginLeft: 5 }}>
-                      {item.commnets.length}
-                    </Text>
+                    <Text style={styles.text}>{item.commnets.length}</Text>
                   </TouchableOpacity>
                   <View style={{ flexDirection: "row", marginLeft: 30 }}>
                     <SvgLike />
-                    <Text style={{ ...styles.text, marginLeft: 5 }}>
-                      {item.likesQuantity}
-                    </Text>
+                    <Text style={styles.text}>{item.likesQuantity}</Text>
                   </View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      position: "absolute",
-                      top: 0,
-                      right: 0,
-                    }}
-                  >
+                  <View style={styles.locationWrapper}>
                     <SvgLocation />
-                    <Text style={{ ...styles.text, marginLeft: 8 }}>
+                    <Text style={{ ...styles.text, marginLeft: 3 }}>
                       {item.location}
                     </Text>
                   </View>
@@ -144,6 +129,13 @@ const styles = StyleSheet.create({
     fontWeight: "19",
     justifyContent: "center",
     alignItems: "center",
+    marginLeft: 5,
+  },
+  locationWrapper: {
+    flexDirection: "row",
+    position: "absolute",
+    top: 0,
+    right: 0,
   },
 });
 

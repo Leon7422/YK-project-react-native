@@ -5,15 +5,13 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  Dimensions,
 } from "react-native";
-import { Dimensions } from "react-native";
 import images from "../components/SVG";
 import { useNavigation } from "@react-navigation/native";
-import backEnd from "../helpers/backEnd";
+import userBackEnd from "../helpers/userBackEnd";
 
 const HomeScreen = ({ setIsAuth }) => {
-  const windowHeight = Dimensions.get("window").height;
-  const galleryHeight = windowHeight - 88;
   const windowWidth = Dimensions.get("window").width;
   const { SvgExit, SvgLike, SvgComment, SvgLocation } = images;
   const navigation = useNavigation();
@@ -30,27 +28,14 @@ const HomeScreen = ({ setIsAuth }) => {
               <SvgExit />
             </TouchableOpacity>
           </View>
-          <View style={{ ...styles.gallery }}></View>
-          <View
-            style={{
-              flexDirection: "row",
-              marginTop: 32,
-              marginLeft: 16,
-              marginBottom: 32,
-              alignItems: "center",
-            }}
-          >
+          <View style={styles.userContainer}>
             <View style={{ marginRight: 8 }}>
               <Image
                 source={{
                   uri: "https://cdn.pixabay.com/photo/2016/03/23/04/01/woman-1274056_960_720.jpg",
                 }}
-                style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 16,
-                }}
-              ></Image>
+                style={styles.userAvatar}
+              />
             </View>
             <View>
               <Text style={{ fontSize: 13, lineHeight: 15, fontWeight: "700" }}>
@@ -63,15 +48,12 @@ const HomeScreen = ({ setIsAuth }) => {
           </View>
         </View>
       }
-      data={backEnd}
+      data={userBackEnd}
       renderItem={({ item }) => (
         <View style={{ width: windowWidth, backgroundColor: "#FFFFFF" }}>
-          <View style={{ ...styles.galletyItem }}>
+          <View style={styles.galletyItem}>
             <View>
-              <Image
-                source={{ uri: item.photoURL }}
-                style={{ ...styles.image }}
-              />
+              <Image source={{ uri: item.photoURL }} style={styles.image} />
             </View>
             <Text style={styles.photoName}>{item.photoAlt}</Text>
             <View
@@ -85,26 +67,15 @@ const HomeScreen = ({ setIsAuth }) => {
                 style={{ flexDirection: "row" }}
               >
                 <SvgComment />
-                <Text style={{ ...styles.text, marginLeft: 5 }}>
-                  {item.commnets.length}
-                </Text>
+                <Text style={styles.text}>{item.commnets.length}</Text>
               </TouchableOpacity>
               <View style={{ flexDirection: "row", marginLeft: 30 }}>
                 <SvgLike />
-                <Text style={{ ...styles.text, marginLeft: 5 }}>
-                  {item.likesQuantity}
-                </Text>
+                <Text style={styles.text}>{item.likesQuantity}</Text>
               </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                }}
-              >
+              <View style={styles.locationWrapper}>
                 <SvgLocation />
-                <Text style={{ ...styles.text, marginLeft: 8 }}>
+                <Text style={{ ...styles.text, marginLeft: 3 }}>
                   {item.location}
                 </Text>
               </View>
@@ -118,6 +89,7 @@ const HomeScreen = ({ setIsAuth }) => {
 };
 
 const styles = StyleSheet.create({
+  // HEADER
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
@@ -146,17 +118,23 @@ const styles = StyleSheet.create({
     right: 10,
     top: 55,
   },
-  headerText: {
-    textAlign: "center",
-    fontSize: 30,
-    lineHeight: 35,
-    fontWeight: "500",
-    color: "#212121",
-    letterSpacing: 0.01,
+
+  userContainer: {
+    flexDirection: "row",
+    marginTop: 32,
+    marginLeft: 16,
+    marginBottom: 32,
+    alignItems: "center",
   },
-  main: {
-    overflow: "scroll",
+
+  userAvatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 16,
   },
+
+  // MAIN (PHOTO LIST)
+
   galletyItem: {
     marginHorizontal: 16,
     marginBottom: 40,
@@ -176,6 +154,13 @@ const styles = StyleSheet.create({
     fontWeight: "19",
     justifyContent: "center",
     alignItems: "center",
+    marginLeft: 5,
+  },
+  locationWrapper: {
+    flexDirection: "row",
+    position: "absolute",
+    top: 0,
+    right: 0,
   },
 });
 

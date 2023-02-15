@@ -26,6 +26,7 @@ const LoginScreen = ({ setIsAuth }) => {
   const [borderInputColorEmail, setBorderInputColorEmail] = useState("#E8E8E8");
   const [borderInputColorPassword, setBorderInputColorPassword] =
     useState("#E8E8E8");
+
   const heightKeyboard = useKeyboard();
   const navigation = useNavigation();
 

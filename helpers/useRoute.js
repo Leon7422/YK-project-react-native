@@ -1,15 +1,16 @@
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
-import HomeScreen from "../screens/HomeScreen";
-
 import PostScreen from "../screens/PostScreen";
+import HomeNavigator from "../bottomTabNavigators/homeNavigator";
+import ProfileNavigator from "../bottomTabNavigators/profileNavigator";
+
 import images from "../components/SVG";
+
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useState } from "react";
 import { useKeyboard } from "./useKeyboard";
-import HomeNavigator from "../bottomTabNavigators/homeNavigator";
-import ProfileNavigator from "../bottomTabNavigators/profileNavigator";
+
 import getActiveRouteState from "./getActiveRouteState";
 
 const AuthStack = createStackNavigator();
@@ -17,7 +18,7 @@ const MainTab = createBottomTabNavigator();
 
 const { SvgGrid, SvgPerson, SvgPlus } = images;
 
-const colorChanger = (focused, setPostActive) => {
+const colorChanger = (focused) => {
   if (focused) {
     return "blue";
   } else {
@@ -27,7 +28,6 @@ const colorChanger = (focused, setPostActive) => {
 
 const useRoute = () => {
   const heightKeyboard = useKeyboard();
-  const [postActive, setPostActive] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
 
   if (!isAuth) {
@@ -51,10 +51,9 @@ const useRoute = () => {
           tabBarStyle: {
             backgroundColor: "#FFF",
             shadowColor: 0,
-
-            height: postActive ? 0 : 70,
-            paddingTop: heightKeyboard === 0 ? 15 : 0,
-            paddingBottom: heightKeyboard === 0 ? 15 : 0,
+            height: 70,
+            paddingTop: 15,
+            paddingBottom: 15,
             paddingLeft: 45,
             paddingRight: 45,
             borderTopWidth: 1,
@@ -82,12 +81,7 @@ const useRoute = () => {
             tabBarStyle: { display: "none" },
             headerShown: false,
             tabBarIcon: ({ focused, size, color }) => {
-              return (
-                <SvgPlus
-                  size={size}
-                  color={colorChanger(focused, setPostActive)}
-                />
-              );
+              return <SvgPlus size={size} color={colorChanger(focused)} />;
             },
 
             tabBarIconStyle: {
@@ -119,10 +113,9 @@ const useRoute = () => {
                   : {
                       backgroundColor: "#FFF",
                       shadowColor: 0,
-
-                      height: postActive ? 0 : 70,
-                      paddingTop: heightKeyboard === 0 ? 15 : 0,
-                      paddingBottom: heightKeyboard === 0 ? 15 : 0,
+                      height: 70,
+                      paddingTop: 15,
+                      paddingBottom: 15,
                       paddingLeft: 45,
                       paddingRight: 45,
                       borderTopWidth: 1,
