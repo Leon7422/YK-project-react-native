@@ -6,11 +6,18 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Image,
+  Dimensions,
 } from "react-native";
-import { useState } from "react";
+import { Camera } from "expo-camera";
+import { useState, useEffect } from "react";
 import { useKeyboard } from "../helpers/useKeyboard";
+import * as MediaLibrary from "expo-media-library";
+import { FontAwesome5, Ionicons, Fontisto } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
+import CameraComponent from "../components/PostScreen/Camera";
 
-import UploadPostImage from "../components/UploadPostImage";
+import UploadPostImage from "../components/PostScreen/UploadPostImage";
 import images from "../components/SVG";
 
 const initialState = {
@@ -23,7 +30,23 @@ const PostScreen = ({ navigation }) => {
   const [image, setImage] = useState(null);
   const { SvgLocation, SvgArrowBack, SvgTrash } = images;
   const [postData, setPostData] = useState(initialState);
+  const [hasPermission, setHasPermission] = useState(null);
+  const [cameraRef, setCameraRef] = useState(null);
+  const [cameraOpen, setCameraOpen] = useState(false);
+  const [timerActive, setTimerActive] = useState(false);
+
   const heightKeyboard = useKeyboard();
+  const windowWidth = Dimensions.get("window").width;
+  const windowHeight = Dimensions.get("window").height;
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      await MediaLibrary.requestPermissionsAsync();
+
+      setHasPermission(status === "granted");
+    })();
+  }, []);
 
   const clearState = () => {
     setPostData(initialState);
@@ -44,7 +67,50 @@ const PostScreen = ({ navigation }) => {
     return { color: "#BDBDBD" };
   };
 
-  return (
+  const takePhoto = async () => {
+    if (cameraRef) {
+      const { uri } = await cameraRef.takePictureAsync();
+      await MediaLibrary.createAssetAsync(uri);
+      setImage(uri);
+      setPostData((prState) => ({
+        ...prState,
+        image: uri,
+      }));
+      setTimerActive(true);
+      setTimeout(() => {
+        setTimerActive(false);
+      }, 3000);
+    }
+  };
+
+  const addImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setPostData((prState) => ({
+        ...prState,
+        image: result.assets[0].uri,
+      }));
+      setImage(result.assets[0].uri);
+      setCameraOpen(false);
+    }
+  };
+
+  return cameraOpen ? (
+    <CameraComponent
+      timerActive={timerActive}
+      image={image}
+      setCameraRef={setCameraRef}
+      setCameraOpen={setCameraOpen}
+      takePhoto={takePhoto}
+      addImage={addImage}
+    />
+  ) : (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
         <View style={styles.header}>
@@ -58,11 +124,12 @@ const PostScreen = ({ navigation }) => {
           <Text style={styles.headerTitle}>Створити публікацію</Text>
         </View>
         <View style={styles.main}>
-          <View style={{ marginTop: 32 }}>
+          <View style={{ borderRadius: 15 }}>
             <UploadPostImage
               setPostData={setPostData}
               image={image}
               setImage={setImage}
+              setCameraOpen={setCameraOpen}
             />
           </View>
           <View style={styles.inputWrapperPostName}>
@@ -104,7 +171,9 @@ const PostScreen = ({ navigation }) => {
               ...styles.postButton,
               ...buttonSubmitColorMaker(),
             }}
-            onPress={() => console.log(postData)}
+            onPress={() => {
+              console.log(postData), setPostData(initialState), setImage(null);
+            }}
           >
             <Text
               style={{

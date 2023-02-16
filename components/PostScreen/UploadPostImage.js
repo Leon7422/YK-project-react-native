@@ -8,30 +8,20 @@ import {
   Dimensions,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import images from "./SVG";
-import { useKeyboard } from "../helpers/useKeyboard";
+import images from "../SVG";
+import { useKeyboard } from "../../helpers/useKeyboard";
+import TakePhoto from "../TakePhoto";
 
-export default function UploadPostImage({ setPostData, image, setImage }) {
+export default function UploadPostImage({
+  setPostData,
+  image,
+  setImage,
+  setCameraOpen,
+}) {
   const windowWidth = Dimensions.get("window").width;
   const heightKeyboard = useKeyboard();
   const { SvgPhotocamera } = images;
 
-  const addImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setPostData((prState) => ({
-        ...prState,
-        image: result.assets[0].uri,
-      }));
-      setImage(result.assets[0].uri);
-    }
-  };
   const colorForCamera = (image) => {
     if (image) {
       return "#FFF";
@@ -39,13 +29,19 @@ export default function UploadPostImage({ setPostData, image, setImage }) {
       return "#BDBDBD";
     }
   };
+
   return (
     <>
-      <TouchableOpacity onPress={addImage}>
+      <TouchableOpacity
+        onPress={() => {
+          setCameraOpen(true);
+        }}
+      >
         <View
           style={{
             ...imageUploaderStyles.container,
             height: heightKeyboard === 0 ? 240 : 80,
+            width: windowWidth - 32,
           }}
         >
           {image && (
@@ -65,9 +61,7 @@ export default function UploadPostImage({ setPostData, image, setImage }) {
               { transform: [{ translateX: -30 }, { translateY: -30 }] },
             ]}
           >
-            <View style={imageUploaderStyles.cameraBackgroung}>
-              <SvgPhotocamera color={colorForCamera(image)} />
-            </View>
+            <TakePhoto image={image} />
           </View>
         </View>
       </TouchableOpacity>
@@ -79,10 +73,10 @@ export default function UploadPostImage({ setPostData, image, setImage }) {
 }
 const imageUploaderStyles = StyleSheet.create({
   container: {
+    marginTop: 32,
     borderWidth: 1,
     borderStyle: "solid",
     borderColor: "#E8E8E8",
-
     backgroundColor: "#F6F6F6",
     borderRadius: 8,
     justifyContent: "center",
