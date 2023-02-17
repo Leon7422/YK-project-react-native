@@ -6,45 +6,41 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-  Image,
-  Dimensions,
 } from "react-native";
 import { Camera } from "expo-camera";
 import { useState, useEffect } from "react";
 import { useKeyboard } from "../helpers/useKeyboard";
 import * as MediaLibrary from "expo-media-library";
-import { FontAwesome5, Ionicons, Fontisto } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import CameraComponent from "../components/PostScreen/Camera";
-
+import CameraComponent from "../components/PostScreen/CameraComponent";
 import UploadPostImage from "../components/PostScreen/UploadPostImage";
 import images from "../components/SVG";
+import userBackEnd from "../helpers/userBackEnd";
+import { nanoid } from "nanoid";
+import * as Location from "expo-location";
 
 const initialState = {
   postName: "",
-  location: "",
+  locationName: "",
   image: null,
+  locationCoords: null,
 };
 
 const PostScreen = ({ navigation }) => {
   const [image, setImage] = useState(null);
   const { SvgLocation, SvgArrowBack, SvgTrash } = images;
   const [postData, setPostData] = useState(initialState);
-  const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
   const [cameraOpen, setCameraOpen] = useState(false);
   const [timerActive, setTimerActive] = useState(false);
 
   const heightKeyboard = useKeyboard();
-  const windowWidth = Dimensions.get("window").width;
-  const windowHeight = Dimensions.get("window").height;
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
+      await Camera.requestCameraPermissionsAsync();
       await MediaLibrary.requestPermissionsAsync();
-
-      setHasPermission(status === "granted");
+      await Location.requestForegroundPermissionsAsync();
     })();
   }, []);
 
@@ -70,11 +66,13 @@ const PostScreen = ({ navigation }) => {
   const takePhoto = async () => {
     if (cameraRef) {
       const { uri } = await cameraRef.takePictureAsync();
+      let location = await Location.getCurrentPositionAsync();
       await MediaLibrary.createAssetAsync(uri);
       setImage(uri);
       setPostData((prState) => ({
         ...prState,
         image: uri,
+        locationCoords: location,
       }));
       setTimerActive(true);
       setTimeout(() => {
@@ -99,6 +97,24 @@ const PostScreen = ({ navigation }) => {
       setImage(result.assets[0].uri);
       setCameraOpen(false);
     }
+  };
+
+  const submitPost = () => {
+    const newPost = {
+      id: nanoid(),
+      userName: "Natali Romanova",
+      photoURL: postData.image,
+      photoAlt: postData.postName,
+      commnets: [],
+      likesQuantity: 0,
+      location: postData.locationName || "Unknown",
+      locationCoords: postData.locationCoords,
+    };
+    userBackEnd.unshift(newPost);
+    console.log(userBackEnd);
+    setPostData(initialState);
+    setImage(null);
+    navigation.navigate("Home");
   };
 
   return cameraOpen ? (
@@ -171,9 +187,7 @@ const PostScreen = ({ navigation }) => {
               ...styles.postButton,
               ...buttonSubmitColorMaker(),
             }}
-            onPress={() => {
-              console.log(postData), setPostData(initialState), setImage(null);
-            }}
+            onPress={submitPost}
           >
             <Text
               style={{

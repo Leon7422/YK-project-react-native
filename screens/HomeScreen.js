@@ -73,12 +73,15 @@ const HomeScreen = ({ setIsAuth }) => {
                 <SvgLike />
                 <Text style={styles.text}>{item.likesQuantity}</Text>
               </View>
-              <View style={styles.locationWrapper}>
+              <TouchableOpacity
+                style={styles.locationWrapper}
+                onPress={() => navigation.navigate("MapsNav")}
+              >
                 <SvgLocation />
                 <Text style={{ ...styles.text, marginLeft: 3 }}>
                   {item.location}
                 </Text>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
