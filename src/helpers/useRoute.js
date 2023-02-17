@@ -63,13 +63,33 @@ const useRoute = () => {
       >
         <MainTab.Screen
           name="Home"
-          options={{
-            headerShown: false,
-            tabBarIcon: ({ focused, size, color }) => {
-              if (heightKeyboard === 0) {
+          options={({ navigation }) => {
+            let navName = null;
+            if (navigation?.getState()) {
+              navName = getActiveRouteState(
+                getActiveRouteState(navigation?.getState())?.state
+              )?.name;
+            }
+            return {
+              headerShown: false,
+              tabBarIcon: ({ focused, size, color }) => {
                 return <SvgGrid size={size} color={color} />;
-              }
-            },
+              },
+              tabBarStyle:
+                navName === "CommentNav"
+                  ? { display: "none" }
+                  : {
+                      backgroundColor: "#FFF",
+                      shadowColor: 0,
+                      height: 70,
+                      paddingTop: 15,
+                      paddingBottom: 15,
+                      paddingLeft: 45,
+                      paddingRight: 45,
+                      borderTopWidth: 1,
+                      borderTopColor: "#b3b3b3",
+                    },
+            };
           }}
         >
           {() => <HomeNavigator setIsAuth={setIsAuth} />}
