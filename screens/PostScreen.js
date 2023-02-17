@@ -16,6 +16,7 @@ import CameraComponent from "../components/PostScreen/CameraComponent";
 import UploadPostImage from "../components/PostScreen/UploadPostImage";
 import images from "../components/SVG";
 import userBackEnd from "../helpers/userBackEnd";
+import "react-native-get-random-values";
 import { nanoid } from "nanoid";
 import * as Location from "expo-location";
 
