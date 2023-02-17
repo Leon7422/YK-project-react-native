@@ -1,6 +1,6 @@
 import { ImageBackground, StyleSheet } from "react-native";
 
-const BGimage = require("../assets/images/photoBg.jpg");
+const BGimage = require("../../assets/images/photoBg.jpg");
 
 export default function ImageBackgroundMountain({ children, style }) {
   return (

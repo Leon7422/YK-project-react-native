@@ -1,5 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native";
-import useRoute from "./helpers/useRoute";
+import useRoute from "./src/helpers/useRoute";
 
 export default function App() {
   const routing = useRoute();
