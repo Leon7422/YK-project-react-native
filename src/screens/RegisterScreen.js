@@ -15,6 +15,8 @@ import * as React from "react";
 import UploadAvatarImage from "../components/UploadAvatarImage";
 import ImageBackgroundMountain from "../components/ImageBackgroundMountain";
 import { useKeyboard } from "../helpers/useKeyboard";
+import { useDispatch } from "react-redux";
+import authOperations from "../redux/auth/authOperations";
 
 const initialState = {
   email: "",
@@ -30,14 +32,21 @@ const RegisterForm = ({ setIsAuth }) => {
   const [borderInputColorPassword, setBorderInputColorPassword] =
     useState("#E8E8E8");
   const [borderInputColorNick, setBorderInputColorNick] = useState("#E8E8E8");
+
   const heightKeyboard = useKeyboard();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (heightKeyboard === 0) {
       setIsShowKeyboard(false);
     }
   }, [heightKeyboard]);
+
+  const handleSubmit = () => {
+    dispatch(authOperations.authRegister(loginData));
+    setLoginData(initialState);
+  };
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -143,14 +152,7 @@ const RegisterForm = ({ setIsAuth }) => {
                 ""
               ) : (
                 <>
-                  <TouchableOpacity
-                    style={styles.btn}
-                    onPress={() => {
-                      console.log(loginData);
-                      setLoginData(initialState);
-                      setIsAuth(true);
-                    }}
-                  >
+                  <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
                     <Text style={styles.btnText}>Зарегистрироваться</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
