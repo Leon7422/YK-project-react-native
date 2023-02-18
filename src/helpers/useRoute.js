@@ -26,18 +26,17 @@ const colorChanger = (focused) => {
   }
 };
 
-const useRoute = () => {
+const useRoute = (user) => {
   const heightKeyboard = useKeyboard();
-  const [isAuth, setIsAuth] = useState(false);
 
-  if (!isAuth) {
+  if (!user) {
     return (
       <AuthStack.Navigator>
         <AuthStack.Screen name="Login" options={{ headerShown: false }}>
-          {() => <LoginScreen setIsAuth={setIsAuth} />}
+          {() => <LoginScreen />}
         </AuthStack.Screen>
         <AuthStack.Screen name="Register" options={{ headerShown: false }}>
-          {() => <RegisterScreen setIsAuth={setIsAuth} />}
+          {() => <RegisterScreen />}
         </AuthStack.Screen>
       </AuthStack.Navigator>
     );
@@ -92,7 +91,7 @@ const useRoute = () => {
             };
           }}
         >
-          {() => <HomeNavigator setIsAuth={setIsAuth} />}
+          {() => <HomeNavigator />}
         </MainTab.Screen>
         <MainTab.Screen
           name="Post"
@@ -144,7 +143,7 @@ const useRoute = () => {
             };
           }}
         >
-          {() => <ProfileNavigator setIsAuth={setIsAuth} />}
+          {() => <ProfileNavigator />}
         </MainTab.Screen>
       </MainTab.Navigator>
     </>

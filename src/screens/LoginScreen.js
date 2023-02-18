@@ -13,6 +13,8 @@ import {
 import BackgroundImageMountain from "../components/ImageBackgroundMountain";
 import { useKeyboard } from "../helpers/useKeyboard";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import authOperations from "../redux/auth/authOperations";
 
 const initialState = {
   email: "",
@@ -29,12 +31,18 @@ const LoginScreen = ({ setIsAuth }) => {
 
   const heightKeyboard = useKeyboard();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (heightKeyboard === 0) {
       setIsShowKeyboard(false);
     }
   }, [heightKeyboard]);
+
+  const handleLogin = () => {
+    dispatch(authOperations.authLogin(loginData));
+    setLoginData(initialState);
+  };
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -114,14 +122,7 @@ const LoginScreen = ({ setIsAuth }) => {
                 ""
               ) : (
                 <>
-                  <TouchableOpacity
-                    style={styles.btn}
-                    onPress={() => {
-                      console.log(loginData);
-                      setLoginData(initialState);
-                      setIsAuth(true);
-                    }}
-                  >
+                  <TouchableOpacity style={styles.btn} onPress={handleLogin}>
                     <Text style={styles.btnText}>Войти</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
