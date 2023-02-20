@@ -14,11 +14,19 @@ import ImageBackgroundMountain from "../components/ImageBackgroundMountain";
 import images from "../components/SVG";
 import { useNavigation } from "@react-navigation/native";
 import userBackEnd from "../helpers/userBackEnd";
+import authOperations from "../redux/auth/authOperations";
+import { useDispatch } from "react-redux";
 
 const ProfileScreen = ({ setIsAuth }) => {
   const { SvgLike, SvgComment, SvgLocation, SvgExit } = images;
   const navigation = useNavigation();
   const windowWidth = Dimensions.get("window").width;
+  const dispatch = useDispatch();
+
+  const logOut = () => {
+    dispatch(authOperations.authLogout());
+  };
+
   return (
     <ImageBackgroundMountain>
       <SafeAreaView>
@@ -38,7 +46,7 @@ const ProfileScreen = ({ setIsAuth }) => {
                     right: 18,
                     bottom: 0,
                   }}
-                  onPress={() => setIsAuth(false)}
+                  onPress={logOut}
                 >
                   <SvgExit />
                 </TouchableOpacity>
