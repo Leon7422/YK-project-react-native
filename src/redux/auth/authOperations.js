@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { authSlice } from "./authSlice";
 
@@ -43,7 +44,9 @@ const authRegister =
   };
 
 const authLogout = () => async (dispatch, getState) => {};
-const authCurrentUser = () => async (dispatch, getState) => {};
+const authCurrentUser = () => async (dispatch, getState) => {
+  await onAuthStateChanged(auth, (user) => setUser(user));
+};
 
 const authOperations = {
   authLogin,
