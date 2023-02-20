@@ -3,7 +3,9 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
+import { authSlice } from "./authSlice";
 
 const authLogin =
   ({ email, password }) =>
@@ -11,6 +13,7 @@ const authLogin =
     try {
       const auth = getAuth();
       const user = await signInWithEmailAndPassword(auth, email, password);
+
       console.log(user);
     } catch (error) {
       console.log(error);
@@ -22,19 +25,31 @@ const authRegister =
   async (dispatch, getState) => {
     try {
       const auth = getAuth();
-      const user = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(user);
+      await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(auth.currentUser, {
+        displayName: nick,
+      });
+      const userSucces = auth.currentUser;
+      dispatch(
+        authSlice.actions.updateUserProfile({
+          userId: userSucces.uid,
+          nickName: userSucces.displayName,
+        })
+      );
+      console.log(userSucces);
     } catch (error) {
       console.log(error);
     }
   };
 
 const authLogout = () => async (dispatch, getState) => {};
+const authCurrentUser = () => async (dispatch, getState) => {};
 
 const authOperations = {
   authLogin,
   authRegister,
   authLogout,
+  authCurrentUser,
 };
 
 export default authOperations;
