@@ -13,15 +13,28 @@ import UploadAvatarImage from "../components/UploadAvatarImage";
 import ImageBackgroundMountain from "../components/ImageBackgroundMountain";
 import images from "../components/SVG";
 import { useNavigation } from "@react-navigation/native";
-import userBackEnd from "../helpers/userBackEnd";
 import authOperations from "../redux/auth/authOperations";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import postOperation from "../redux/posts/postsOperation";
+import postsSelectors from "../redux/posts/postsSelectors";
+import authSelectors from "../redux/auth/authSelectors";
+import { useEffect } from "react";
 
 const ProfileScreen = ({ setIsAuth }) => {
   const { SvgLike, SvgComment, SvgLocation, SvgExit } = images;
   const navigation = useNavigation();
   const windowWidth = Dimensions.get("window").width;
   const dispatch = useDispatch();
+  const { nickName } = useSelector(authSelectors.getUser);
+  const posts = useSelector(postsSelectors.getOwnPosts)
+    .slice()
+    .sort((a, b) => {
+      return b.createdAt - a.createdAt;
+    });
+
+  useEffect(() => {
+    dispatch(postOperation.getOwnPosts());
+  }, []);
 
   const logOut = () => {
     dispatch(authOperations.authLogout());
@@ -39,7 +52,7 @@ const ProfileScreen = ({ setIsAuth }) => {
             >
               <UploadAvatarImage />
               <View style={styles.header}>
-                <Text style={styles.headerText}>UserName</Text>
+                <Text style={styles.headerText}>{nickName}</Text>
                 <TouchableOpacity
                   style={{
                     position: "absolute",
@@ -53,7 +66,7 @@ const ProfileScreen = ({ setIsAuth }) => {
               </View>
             </View>
           }
-          data={userBackEnd}
+          data={posts}
           renderItem={({ item }) => (
             <View style={{ width: windowWidth, backgroundColor: "#FFFFFF" }}>
               <View style={styles.galletyItem}>
@@ -72,11 +85,11 @@ const ProfileScreen = ({ setIsAuth }) => {
                     style={{ flexDirection: "row" }}
                   >
                     <SvgComment />
-                    <Text style={styles.text}>{item.commnets.length}</Text>
+                    <Text style={styles.text}>{item.comments.length}</Text>
                   </TouchableOpacity>
                   <View style={{ flexDirection: "row", marginLeft: 30 }}>
                     <SvgLike />
-                    <Text style={styles.text}>{item.likesQuantity}</Text>
+                    <Text style={styles.text}>{item.likes.length}</Text>
                   </View>
                   <View style={styles.locationWrapper}>
                     <SvgLocation />

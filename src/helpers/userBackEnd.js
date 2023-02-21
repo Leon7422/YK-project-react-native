@@ -5,7 +5,7 @@ const userBackEnd = [
     photoURL:
       "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072821_960_720.jpg",
     photoAlt: "Forest",
-    commnets: [
+    comments: [
       {
         author: "Random Guy",
         comment: "Hello",
@@ -23,7 +23,7 @@ const userBackEnd = [
         comment: "Im fine thnanks",
       },
     ],
-    likesQuantity: 182,
+    likes: [],
     location: "Canada",
   },
   {
@@ -32,7 +32,7 @@ const userBackEnd = [
     photoURL:
       "https://cdn.pixabay.com/photo/2016/02/07/19/48/aurora-1185464_960_720.jpg",
     photoAlt: "North Light",
-    commnets: [
+    comments: [
       {
         author: "Random Guy",
         comment: "Hello",
@@ -50,7 +50,7 @@ const userBackEnd = [
         comment: "Im fine thnanks",
       },
     ],
-    likesQuantity: 411,
+    likes: [],
     location: "Alaska",
   },
   {
@@ -59,7 +59,7 @@ const userBackEnd = [
     photoURL:
       "https://cdn.pixabay.com/photo/2020/04/04/03/11/amazonas-5000657_960_720.jpg",
     photoAlt: "Our home for weekend",
-    commnets: [
+    comments: [
       {
         author: "Random Guy",
         comment: "Hello",
@@ -77,7 +77,7 @@ const userBackEnd = [
         comment: "Im fine thnanks",
       },
     ],
-    likesQuantity: 98,
+    likes: [],
     location: "Peru",
   },
 ];

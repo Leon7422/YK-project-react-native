@@ -15,10 +15,12 @@ const authLogin =
     try {
       const auth = getAuth();
       const user = await signInWithEmailAndPassword(auth, email, password);
+      console.log(user.user);
       dispatch(
         authSlice.actions.updateUserProfile({
           userId: user.user.uid,
           nickName: user.user.displayName,
+          userEmail: user?.user?.email,
         })
       );
       dispatch(authSlice.actions.authCurrentUser(true));
@@ -41,6 +43,7 @@ const authRegister =
         authSlice.actions.updateUserProfile({
           userId: userSucces.uid,
           nickName: userSucces.displayName,
+          userEmail: user?.user?.email,
         })
       );
       console.log(userSucces);
@@ -58,16 +61,16 @@ const authLogout = () => async (dispatch, getState) => {
 const authCurrentUser = () => async (dispatch, getState) => {
   const auth = getAuth();
   await onAuthStateChanged(auth, (user) => {
-    console.log("start");
     if (user) {
+      console.log(user);
       dispatch(
         authSlice.actions.updateUserProfile({
           userId: user.uid,
           nickName: user.displayName,
+          userEmail: user?.email,
         })
       );
       dispatch(authSlice.actions.authCurrentUser(true));
-      console.log("finish");
     }
   });
 };

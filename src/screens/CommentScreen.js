@@ -43,7 +43,7 @@ const CommentScreen = () => {
             </View>
           </View>
         }
-        data={commentBackEnd.commnets}
+        data={commentBackEnd.comments}
         renderItem={({ item }) => {
           const ownerCheck = item.author === "Natali Romanova";
           return (

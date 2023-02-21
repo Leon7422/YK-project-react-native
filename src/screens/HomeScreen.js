@@ -7,24 +7,44 @@ import {
   Image,
   Dimensions,
 } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import images from "../components/SVG";
 import { useNavigation } from "@react-navigation/native";
 import userBackEnd from "../helpers/userBackEnd";
+import { useEffect } from "react";
+import postOperation from "../redux/posts/postsOperation";
+import postsSelectors from "../redux/posts/postsSelectors";
+import authSelectors from "../redux/auth/authSelectors";
+import authOperations from "../redux/auth/authOperations";
 
 const HomeScreen = ({ setIsAuth }) => {
+  const dispatch = useDispatch();
   const windowWidth = Dimensions.get("window").width;
   const { SvgExit, SvgLike, SvgComment, SvgLocation } = images;
   const navigation = useNavigation();
+  const { userId, nickName, userEmail } = useSelector(authSelectors.getUser);
+  const posts = useSelector(postsSelectors.getPosts)
+    .slice()
+    .sort((a, b) => {
+      return b.createdAt - a.createdAt;
+    });
+
+  useEffect(() => {
+    dispatch(postOperation.getAllPosts());
+  }, []);
+  const startingPosts = [...posts, ...userBackEnd];
+
+  const logOut = () => {
+    dispatch(authOperations.authLogout());
+  };
+
   return (
     <FlatList
       ListHeaderComponent={
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Публікації</Text>
-            <TouchableOpacity
-              onPress={() => setIsAuth(false)}
-              style={styles.svgExit}
-            >
+            <TouchableOpacity onPress={logOut} style={styles.svgExit}>
               <SvgExit />
             </TouchableOpacity>
           </View>
@@ -39,16 +59,16 @@ const HomeScreen = ({ setIsAuth }) => {
             </View>
             <View>
               <Text style={{ fontSize: 13, lineHeight: 15, fontWeight: "700" }}>
-                Natali Romanova
+                {nickName}
               </Text>
               <Text style={{ fontSize: 11, lineHeight: 13, fontWeight: "400" }}>
-                email@example.com
+                {userEmail}
               </Text>
             </View>
           </View>
         </View>
       }
-      data={userBackEnd}
+      data={startingPosts}
       renderItem={({ item }) => (
         <View style={{ width: windowWidth, backgroundColor: "#FFFFFF" }}>
           <View style={styles.galletyItem}>
@@ -67,11 +87,11 @@ const HomeScreen = ({ setIsAuth }) => {
                 style={{ flexDirection: "row" }}
               >
                 <SvgComment />
-                <Text style={styles.text}>{item.commnets.length}</Text>
+                <Text style={styles.text}>{item.comments.length}</Text>
               </TouchableOpacity>
               <View style={{ flexDirection: "row", marginLeft: 30 }}>
                 <SvgLike />
-                <Text style={styles.text}>{item.likesQuantity}</Text>
+                <Text style={styles.text}>{item.likes.length}</Text>
               </View>
               <TouchableOpacity
                 style={styles.locationWrapper}

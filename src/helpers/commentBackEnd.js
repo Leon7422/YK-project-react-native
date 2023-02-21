@@ -1,7 +1,7 @@
 const commentBackEnd = {
   photoURL:
     "https://cdn.pixabay.com/photo/2021/12/29/08/18/insect-6900940_960_720.jpg",
-  commnets: [
+  comments: [
     {
       id: 1,
       author: "Random Guy",

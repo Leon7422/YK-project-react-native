@@ -11,13 +11,13 @@ import "firebase/firestore";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDL4D4xvd6P4jz0UWp1IrOTJX_N6qje6-U",
-  authDomain: "react-native-social-725000725.firebaseapp.com",
-  projectId: "react-native-social-725000725",
-  storageBucket: "react-native-social-725000725.appspot.com",
-  messagingSenderId: "57885908913",
-  appId: "1:57885908913:web:a59663734e462b116f6790",
-  measurementId: "G-BSHN25TR49",
+  apiKey: "AIzaSyDhlxn39TetcWdzA5Lyoo7jvLDUVHQUbdU",
+  authDomain: "reactnative-b4451.firebaseapp.com",
+  projectId: "reactnative-b4451",
+  storageBucket: "reactnative-b4451.appspot.com",
+  messagingSenderId: "1058702936337",
+  appId: "1:1058702936337:web:efafcf47a1606c1cf2a4b0",
+  measurementId: "G-YWFWEW24TL",
 };
 
 // Initialize Firebase

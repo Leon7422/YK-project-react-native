@@ -20,6 +20,8 @@ import "react-native-get-random-values";
 import { nanoid } from "nanoid";
 import * as Location from "expo-location";
 import uploadPhotoToServer from "../api/uploadPhotoToServer";
+import postOperation from "../redux/posts/postsOperation";
+import { useDispatch, useSelector } from "react-redux";
 
 const initialState = {
   postName: "",
@@ -37,6 +39,9 @@ const PostScreen = ({ navigation }) => {
   const [timerActive, setTimerActive] = useState(false);
 
   const heightKeyboard = useKeyboard();
+  const dispatch = useDispatch();
+
+  const { userId, nickName } = useSelector((state) => state.auth);
 
   useEffect(() => {
     (async () => {
@@ -102,22 +107,24 @@ const PostScreen = ({ navigation }) => {
   };
 
   const submitPost = async () => {
-    console.log(image);
     const photoUrl = await uploadPhotoToServer(image);
-    console.log("here");
-    console.log(photoUrl);
+
     const newPost = {
       id: nanoid(),
-      userName: "Natali Romanova",
+      userId: userId,
+      userName: nickName,
       photoURL: photoUrl,
       photoAlt: postData.postName,
-      commnets: [],
-      likesQuantity: 0,
+      comments: [],
+      likes: [],
       location: postData?.locationName || "Unknown",
       locationCoords: postData.locationCoords,
+      createdAt: Date.now(),
     };
+
+    dispatch(postOperation.uploadPostToServer(newPost));
     userBackEnd.unshift(newPost);
-    console.log(userBackEnd);
+    console.log(newPost);
     setPostData(initialState);
     setImage(null);
     navigation.navigate("Home");
@@ -175,13 +182,13 @@ const PostScreen = ({ navigation }) => {
             <View>
               <TextInput
                 placeholder={"Локація..."}
-                value={postData.location}
+                value={postData.locationName}
                 placeholderTextColor="#BDBDBD"
                 style={styles.textInput}
                 onChangeText={(value) => {
                   setPostData((prState) => ({
                     ...prState,
-                    location: value,
+                    locationName: value,
                   }));
                 }}
               />
