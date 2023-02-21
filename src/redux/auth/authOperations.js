@@ -52,6 +52,7 @@ const authRegister =
 const authLogout = () => async (dispatch, getState) => {
   const auth = getAuth();
   await signOut(auth);
+  dispatch(authSlice.actions.authLogOut());
 };
 
 const authCurrentUser = () => async (dispatch, getState) => {

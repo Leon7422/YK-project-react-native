@@ -19,6 +19,7 @@ import userBackEnd from "../helpers/userBackEnd";
 import "react-native-get-random-values";
 import { nanoid } from "nanoid";
 import * as Location from "expo-location";
+import uploadPhotoToServer from "../api/uploadPhotoToServer";
 
 const initialState = {
   postName: "",
@@ -100,15 +101,19 @@ const PostScreen = ({ navigation }) => {
     }
   };
 
-  const submitPost = () => {
+  const submitPost = async () => {
+    console.log(image);
+    const photoUrl = await uploadPhotoToServer(image);
+    console.log("here");
+    console.log(photoUrl);
     const newPost = {
       id: nanoid(),
       userName: "Natali Romanova",
-      photoURL: postData.image,
+      photoURL: photoUrl,
       photoAlt: postData.postName,
       commnets: [],
       likesQuantity: 0,
-      location: postData.locationName || "Unknown",
+      location: postData?.locationName || "Unknown",
       locationCoords: postData.locationCoords,
     };
     userBackEnd.unshift(newPost);
