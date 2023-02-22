@@ -8,6 +8,8 @@ import {
   signOut,
 } from "firebase/auth";
 import { authSlice } from "./authSlice";
+import { postsSlice } from "../posts/postsSlice";
+import uploadUserAvatarToServer from "../../api/uploadUserAvatarToServer";
 
 const authLogin =
   ({ email, password }) =>
@@ -21,6 +23,7 @@ const authLogin =
           userId: user.user.uid,
           nickName: user.user.displayName,
           userEmail: user?.user?.email,
+          userAvatar: user?.user?.photoURL,
         })
       );
       dispatch(authSlice.actions.authCurrentUser(true));
@@ -30,20 +33,26 @@ const authLogin =
   };
 
 const authRegister =
-  ({ email, password, nick }) =>
+  ({ email, password, nick, image }) =>
   async (dispatch, getState) => {
     try {
       const auth = getAuth();
       await createUserWithEmailAndPassword(auth, email, password);
+
+      const imageURL = await uploadUserAvatarToServer(image);
+      console.log(imageURL);
       await updateProfile(auth.currentUser, {
         displayName: nick,
+        photoURL: imageURL,
       });
+      console.log({ photoAvatarURL: imageURL });
       const userSucces = auth.currentUser;
       dispatch(
         authSlice.actions.updateUserProfile({
           userId: userSucces.uid,
           nickName: userSucces.displayName,
-          userEmail: user?.user?.email,
+          userEmail: userSucces.email,
+          userAvatar: userSucces.photoURL,
         })
       );
       console.log(userSucces);
@@ -56,6 +65,7 @@ const authLogout = () => async (dispatch, getState) => {
   const auth = getAuth();
   await signOut(auth);
   dispatch(authSlice.actions.authLogOut());
+  dispatch(postsSlice.actions.postsLogOut());
 };
 
 const authCurrentUser = () => async (dispatch, getState) => {
@@ -68,6 +78,7 @@ const authCurrentUser = () => async (dispatch, getState) => {
           userId: user.uid,
           nickName: user.displayName,
           userEmail: user?.email,
+          userAvatar: user?.photoURL,
         })
       );
       dispatch(authSlice.actions.authCurrentUser(true));

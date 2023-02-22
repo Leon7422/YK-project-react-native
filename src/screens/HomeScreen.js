@@ -10,7 +10,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import images from "../components/SVG";
 import { useNavigation } from "@react-navigation/native";
-import userBackEnd from "../helpers/userBackEnd";
 import { useEffect } from "react";
 import postOperation from "../redux/posts/postsOperation";
 import postsSelectors from "../redux/posts/postsSelectors";
@@ -20,9 +19,11 @@ import authOperations from "../redux/auth/authOperations";
 const HomeScreen = ({ setIsAuth }) => {
   const dispatch = useDispatch();
   const windowWidth = Dimensions.get("window").width;
-  const { SvgExit, SvgLike, SvgComment, SvgLocation } = images;
+  const { SvgExit, SvgLike, SvgComment, SvgLocation, SvgCommentEmpty } = images;
   const navigation = useNavigation();
-  const { userId, nickName, userEmail } = useSelector(authSelectors.getUser);
+  const { nickName, userEmail, userAvatar } = useSelector(
+    authSelectors.getUser
+  );
   const posts = useSelector(postsSelectors.getPosts)
     .slice()
     .sort((a, b) => {
@@ -32,7 +33,6 @@ const HomeScreen = ({ setIsAuth }) => {
   useEffect(() => {
     dispatch(postOperation.getAllPosts());
   }, []);
-  const startingPosts = [...posts, ...userBackEnd];
 
   const logOut = () => {
     dispatch(authOperations.authLogout());
@@ -52,7 +52,7 @@ const HomeScreen = ({ setIsAuth }) => {
             <View style={{ marginRight: 8 }}>
               <Image
                 source={{
-                  uri: "https://cdn.pixabay.com/photo/2016/03/23/04/01/woman-1274056_960_720.jpg",
+                  uri: userAvatar,
                 }}
                 style={styles.userAvatar}
               />
@@ -68,7 +68,7 @@ const HomeScreen = ({ setIsAuth }) => {
           </View>
         </View>
       }
-      data={startingPosts}
+      data={posts}
       renderItem={({ item }) => (
         <View style={{ width: windowWidth, backgroundColor: "#FFFFFF" }}>
           <View style={styles.galletyItem}>
@@ -83,11 +83,16 @@ const HomeScreen = ({ setIsAuth }) => {
               }}
             >
               <TouchableOpacity
-                onPress={() => navigation.navigate("CommentNav")}
+                onPress={() =>
+                  navigation.navigate("CommentNav", {
+                    postId: item.id,
+                    postPhoto: item.photoURL,
+                  })
+                }
                 style={{ flexDirection: "row" }}
               >
-                <SvgComment />
-                <Text style={styles.text}>{item.comments.length}</Text>
+                {item.countComments > 0 ? <SvgComment /> : <SvgCommentEmpty />}
+                <Text style={styles.text}>{item.countComments || 0}</Text>
               </TouchableOpacity>
               <View style={{ flexDirection: "row", marginLeft: 30 }}>
                 <SvgLike />
@@ -95,7 +100,11 @@ const HomeScreen = ({ setIsAuth }) => {
               </View>
               <TouchableOpacity
                 style={styles.locationWrapper}
-                onPress={() => navigation.navigate("MapsNav")}
+                onPress={() =>
+                  navigation.navigate("MapsNav", {
+                    location: item.locationCoords,
+                  })
+                }
               >
                 <SvgLocation />
                 <Text style={{ ...styles.text, marginLeft: 3 }}>

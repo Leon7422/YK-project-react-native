@@ -32,6 +32,7 @@ const RegisterForm = ({ setIsAuth }) => {
   const [borderInputColorPassword, setBorderInputColorPassword] =
     useState("#E8E8E8");
   const [borderInputColorNick, setBorderInputColorNick] = useState("#E8E8E8");
+  const [image, setImage] = useState(null);
 
   const heightKeyboard = useKeyboard();
   const navigation = useNavigation();
@@ -44,7 +45,11 @@ const RegisterForm = ({ setIsAuth }) => {
   }, [heightKeyboard]);
 
   const handleSubmit = () => {
-    dispatch(authOperations.authRegister(loginData));
+    if (image === null) {
+      alert("please pick an image");
+      return;
+    }
+    dispatch(authOperations.authRegister({ ...loginData, image }));
     setLoginData(initialState);
   };
 
@@ -58,7 +63,7 @@ const RegisterForm = ({ setIsAuth }) => {
               height: isShowKeyboard ? heightKeyboard + 355 : 549,
             }}
           >
-            <UploadAvatarImage />
+            <UploadAvatarImage image={image} setImage={setImage} />
             <Text style={styles.header}>Регистрация</Text>
             <View style={styles.form}>
               <KeyboardAvoidingView

@@ -11,14 +11,40 @@ import {
 } from "react-native";
 import images from "../components/SVG";
 import { useNavigation } from "@react-navigation/native";
-import commentBackEnd from "../helpers/commentBackEnd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRoute } from "@react-navigation/native";
+import postOperation from "../redux/posts/postsOperation";
+import { useDispatch } from "react-redux";
+import postsSelectors from "../redux/posts/postsSelectors";
+import authSelectors from "../redux/auth/authSelectors";
+import { useSelector } from "react-redux";
 
 const CommentScreen = () => {
   const [comment, setComment] = useState("");
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+  const route = useRoute();
+  const { postId, postPhoto } = route.params;
+  const comments = useSelector(postsSelectors.getComments);
+  const sortedComments = [...comments].sort(
+    (a, b) => b.dateForSort - a.dateForSort
+  );
   const windowWidth = Dimensions.get("window").width;
   const { SvgArrowBack, SvgArrowUp } = images;
+  const { userId } = useSelector(authSelectors.getUser);
+  useEffect(() => {
+    dispatch(postOperation.getAllCommentsByPostId(postId));
+
+    return () => {
+      dispatch(postOperation.getAllPosts());
+      dispatch(postOperation.getOwnPosts());
+    };
+  }, [dispatch, postOperation]);
+
+  const createPost = () => {
+    dispatch(postOperation.addCommentByPostID(postId, comment));
+    setComment("");
+  };
 
   return (
     <SafeAreaView>
@@ -36,16 +62,13 @@ const CommentScreen = () => {
               </TouchableOpacity>
             </View>
             <View>
-              <Image
-                source={{ uri: commentBackEnd.photoURL }}
-                style={styles.image}
-              />
+              <Image source={{ uri: postPhoto }} style={styles.image} />
             </View>
           </View>
         }
-        data={commentBackEnd.comments}
+        data={sortedComments}
         renderItem={({ item }) => {
-          const ownerCheck = item.author === "Natali Romanova";
+          const ownerCheck = item.authorId === userId;
           return (
             <View style={{ backgroundColor: "#FFFFFF", paddingBottom: 24 }}>
               <View
@@ -56,7 +79,7 @@ const CommentScreen = () => {
               >
                 <View>
                   <Image
-                    source={{ uri: item.ownerAvatar }}
+                    source={{ uri: item.userAvatar }}
                     style={{
                       ...styles.authorAvatar,
                       marginLeft: ownerCheck ? 15 : 0,
@@ -68,6 +91,8 @@ const CommentScreen = () => {
                   style={{
                     ...styles.commentWrapper,
                     width: windowWidth - 32 - 15 - 30,
+                    borderTopLeftRadius: ownerCheck ? 6 : 0,
+                    borderTopRightRadius: ownerCheck ? 0 : 6,
                   }}
                 >
                   <Text style={{ fontSize: 13, lineHeight: 19 }}>
@@ -80,7 +105,7 @@ const CommentScreen = () => {
                       marginLeft: ownerCheck ? 0 : "auto",
                     }}
                   >
-                    {item.timeStamp}
+                    {item.date}
                   </Text>
                 </View>
               </View>
@@ -99,10 +124,7 @@ const CommentScreen = () => {
           style={styles.footerInput}
         />
         <TouchableOpacity
-          onPress={() => {
-            console.log(comment);
-            setComment("");
-          }}
+          onPress={createPost}
           style={styles.footerSubmitButton}
         >
           <SvgArrowUp />
@@ -159,8 +181,6 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomLeftRadius: 6,
     borderBottomRightRadius: 6,
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 6,
   },
   timeStamp: {
     fontSize: 10,

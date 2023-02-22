@@ -5,14 +5,14 @@ import MapsScreen from "../screens/MapsScreen";
 
 const Tab = createStackNavigator();
 
-const HomeNavigator = ({ setIsAuth }) => {
+const HomeNavigator = () => {
   return (
     <Tab.Navigator>
       <Tab.Screen name="HomeNav" options={{ headerShown: false }}>
-        {() => <HomeScreen setIsAuth={setIsAuth} />}
+        {() => <HomeScreen />}
       </Tab.Screen>
       <Tab.Screen name="CommentNav" options={{ headerShown: false }}>
-        {() => <CommentScreen setIsAuth={setIsAuth} />}
+        {() => <CommentScreen />}
       </Tab.Screen>
       <Tab.Screen name="MapsNav" options={{ headerShown: false }}>
         {() => <MapsScreen />}

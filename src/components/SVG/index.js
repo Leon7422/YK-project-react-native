@@ -9,6 +9,7 @@ import SvgLike from "./SvgLike";
 import SvgComment from "./SvgComment";
 import SvgTrash from "./SvgTrash";
 import SvgArrowUp from "./SvgArrowUp";
+import SvgCommentEmpty from "./SvgCommentEmpty";
 
 const images = {
   SvgExit,
@@ -22,6 +23,7 @@ const images = {
   SvgComment,
   SvgTrash,
   SvgArrowUp,
+  SvgCommentEmpty,
 };
 
 export default images;

@@ -2,10 +2,16 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import images from "../components/SVG";
 import { useNavigation } from "@react-navigation/native";
 import MapView, { Marker } from "react-native-maps";
+import { useRoute } from "@react-navigation/native";
 
 const MapsScreen = () => {
   const { SvgArrowBack } = images;
   const navigation = useNavigation();
+  const route = useRoute();
+  console.log(route.params);
+  const latitude = route?.params?.location?.coords?.latitude;
+  const longitude = route?.params?.location?.coords?.longitude;
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -21,16 +27,16 @@ const MapsScreen = () => {
       <MapView
         style={{ flex: 1 }}
         initialRegion={{
-          latitude: 49.843964985200444,
-          longitude: 24.026282551869787,
+          latitude: latitude || 49.843964985200444,
+          longitude: longitude || 24.026282551869787,
           latitudeDelta: 0.001,
           longitudeDelta: 0.006,
         }}
       >
         <Marker
           coordinate={{
-            latitude: 49.843964985200444,
-            longitude: 24.026282551869787,
+            latitude: latitude || 49.843964985200444,
+            longitude: longitude || 24.026282551869787,
           }}
         />
       </MapView>

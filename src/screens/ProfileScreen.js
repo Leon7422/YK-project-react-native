@@ -18,14 +18,17 @@ import { useDispatch, useSelector } from "react-redux";
 import postOperation from "../redux/posts/postsOperation";
 import postsSelectors from "../redux/posts/postsSelectors";
 import authSelectors from "../redux/auth/authSelectors";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import userOperations from "../redux/user/userOperation";
 
-const ProfileScreen = ({ setIsAuth }) => {
-  const { SvgLike, SvgComment, SvgLocation, SvgExit } = images;
+const ProfileScreen = () => {
+  const { nickName, userAvatar } = useSelector(authSelectors.getUser);
+  const [image, setImage] = useState(userAvatar);
+  const { SvgLike, SvgComment, SvgLocation, SvgExit, SvgCommentEmpty } = images;
   const navigation = useNavigation();
   const windowWidth = Dimensions.get("window").width;
   const dispatch = useDispatch();
-  const { nickName } = useSelector(authSelectors.getUser);
+
   const posts = useSelector(postsSelectors.getOwnPosts)
     .slice()
     .sort((a, b) => {
@@ -36,10 +39,16 @@ const ProfileScreen = ({ setIsAuth }) => {
     dispatch(postOperation.getOwnPosts());
   }, []);
 
+  useEffect(() => {
+    if (image !== userAvatar && image !== null) {
+      dispatch(userOperations.updateUserAvatar(image));
+    }
+  }, [dispatch, userOperations, image]);
+
   const logOut = () => {
     dispatch(authOperations.authLogout());
   };
-
+  console.log(image);
   return (
     <ImageBackgroundMountain>
       <SafeAreaView>
@@ -50,7 +59,8 @@ const ProfileScreen = ({ setIsAuth }) => {
                 ...styles.container,
               }}
             >
-              <UploadAvatarImage />
+              <UploadAvatarImage image={image} setImage={setImage} />
+
               <View style={styles.header}>
                 <Text style={styles.headerText}>{nickName}</Text>
                 <TouchableOpacity
@@ -81,22 +91,38 @@ const ProfileScreen = ({ setIsAuth }) => {
                   }}
                 >
                   <TouchableOpacity
-                    onPress={() => navigation.navigate("CommentNav")}
+                    onPress={() =>
+                      navigation.navigate("CommentNav", {
+                        postId: item.id,
+                        postPhoto: item.photoURL,
+                      })
+                    }
                     style={{ flexDirection: "row" }}
                   >
-                    <SvgComment />
-                    <Text style={styles.text}>{item.comments.length}</Text>
+                    {item.countComments > 0 ? (
+                      <SvgComment />
+                    ) : (
+                      <SvgCommentEmpty />
+                    )}
+                    <Text style={styles.text}>{item.countComments}</Text>
                   </TouchableOpacity>
                   <View style={{ flexDirection: "row", marginLeft: 30 }}>
                     <SvgLike />
                     <Text style={styles.text}>{item.likes.length}</Text>
                   </View>
-                  <View style={styles.locationWrapper}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("MapsNav", {
+                        location: item.locationCoords,
+                      })
+                    }
+                    style={styles.locationWrapper}
+                  >
                     <SvgLocation />
                     <Text style={{ ...styles.text, marginLeft: 3 }}>
                       {item.location}
                     </Text>
-                  </View>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>

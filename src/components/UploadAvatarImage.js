@@ -4,8 +4,7 @@ import { Image, View, TouchableOpacity, StyleSheet } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import Svg, { Circle, Path } from "react-native-svg";
 
-export default function UploadAvatarImage() {
-  const [image, setImage] = useState(null);
+export default function UploadAvatarImage({ image, setImage }) {
   const addImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -20,6 +19,7 @@ export default function UploadAvatarImage() {
       setImage(result.assets[0].uri);
     }
   };
+
   return (
     <View
       style={[
@@ -28,7 +28,10 @@ export default function UploadAvatarImage() {
       ]}
     >
       {image && (
-        <Image source={{ uri: image }} style={{ width: 120, height: 120 }} />
+        <Image
+          source={{ uri: image }}
+          style={{ width: 120, height: 120, borderRadius: 6 }}
+        />
       )}
       <View style={imageUploaderStyles.uploadBtnContainer}>
         <TouchableOpacity
